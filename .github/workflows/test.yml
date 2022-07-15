@@ -21,8 +21,14 @@ jobs:
       - working-directory: ./github-actions/${{ matrix.github-action }}
         run: |
           npm run all
+          
+
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        github-action: [ sdk-readme-generator ]
+        
     steps:
       - uses: actions/checkout@v2
       - uses: ./github-actions/${{ matrix.github-action }}
