@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /github-actions/sdk-readme-generator
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /github-actions/sdk-readme-generator
+    schedule:
+      interval: daily

@@ -1,0 +1,33 @@
+name: 'build-test'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        github-action: [ sdk-readme-generator ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - working-directory: ./github-actions/${{ matrix.github-action }}
+        run: |
+          npm install
+      - working-directory: ./github-actions/${{ matrix.github-action }}
+        run: |
+          npm run all
+          
+
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./github-actions/sdk-readme-generator
+        with:
+          milliseconds: 1000
