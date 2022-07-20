@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        github-action: [sdk-readme-generator]
+        github-action: [oss-readme-template]
 
     steps:
       - uses: actions/checkout@v2
