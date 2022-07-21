@@ -8,6 +8,14 @@ inputs:
   project_stability:
     required: true
     description: 'alpha, beta, stable'
+  template_file:
+    required: false
+    description: 'path to readme template file'
+    default: 'README.template.md'
+  output_file:
+    required: false
+    description: 'output file path to write generated README'
+    default: 'README.md'
 runs:
   using: 'node16'
   main: 'dist/index.js'

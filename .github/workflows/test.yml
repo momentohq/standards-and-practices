@@ -30,5 +30,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./github-actions/oss-readme-template
         with:
+          template_file: ./github-actions/oss-readme-template/__tests__/workflows/README.template.md
+          output_file: ./github-actions/oss-readme-template/__tests__/workflows/README.md
           project_status: incubating
           project_stability: alpha

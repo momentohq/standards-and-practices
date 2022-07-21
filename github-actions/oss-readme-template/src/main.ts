@@ -10,16 +10,27 @@ function run(): void {
     const projectStability = validateProjectStability(
       core.getInput('project_stability', {required: true, trimWhitespace: true})
     );
+
+    const templateFile = core.getInput('template_file', {
+      required: false,
+      trimWhitespace: true,
+    });
+
+    const outputFile = core.getInput('output_file', {
+      required: false,
+      trimWhitespace: true,
+    });
+
     core.info(`
 Generating Momento OSS README
-         input file: README.md.template
-        output file: README.md
+         input file: ${templateFile}
+        output file: ${outputFile}
      project status: ${projectStatus}
   project stability: ${projectStability}
 `);
     generateReadmeFileFromTemplateFile({
-      templateFile: 'README.md.template',
-      outputFile: 'README.md',
+      templateFile: templateFile,
+      outputFile: outputFile,
       projectStatus: projectStatus,
       projectStability: projectStability,
     });
