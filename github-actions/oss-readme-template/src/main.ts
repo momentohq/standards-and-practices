@@ -12,9 +12,6 @@ function run(): void {
       core.getInput('project_stability', {required: true, trimWhitespace: true})
     );
 
-    core.info(`CWD is: ${process.cwd()}`);
-    core.info(`ls: ${child_process.execSync('ls -al').toString()}`);
-
     const templateFile = core.getInput('template_file', {
       required: false,
       trimWhitespace: true,
