@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import {generateReadmeFileFromTemplateFile} from './readme';
 import {validateProjectStability, validateProjectStatus} from './inputs';
+import * as child_process from 'child_process';
 
 function run(): void {
   try {
@@ -10,6 +11,9 @@ function run(): void {
     const projectStability = validateProjectStability(
       core.getInput('project_stability', {required: true, trimWhitespace: true})
     );
+
+    core.info(`CWD is: ${process.cwd()}`);
+    core.info(`ls: ${child_process.execSync('ls -al').toString()}`);
 
     const templateFile = core.getInput('template_file', {
       required: false,
