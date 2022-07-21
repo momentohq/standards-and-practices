@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
 import {generateReadmeFileFromTemplateFile} from './readme';
 import {validateProjectStability, validateProjectStatus} from './inputs';
-import * as child_process from 'child_process';
 
 function run(): void {
   try {
