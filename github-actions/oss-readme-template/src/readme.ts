@@ -31,14 +31,15 @@ interface ReadmeStringGeneratorOptions {
 }
 
 interface HeaderTemplateContext {
+  githubOrgName: string;
   projectStatus: string;
   projectStability: string;
 }
 
 const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
 
-[![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-{{ projectStatus }}.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-{{ projectStability }}.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+[![project status](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-status-{{ projectStatus }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md)
+[![project stability](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-stability-{{ projectStability }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md) 
 `;
 
 interface ReadmeTemplateContext {
@@ -79,6 +80,7 @@ export function generateReadmeStringFromTemplateString(
 
   const ossHeaderTemplate = OSS_README_HEADER_TEMPLATE;
   const headerContext: HeaderTemplateContext = {
+    githubOrgName: 'momentohq',
     projectStatus: options.projectStatus.valueOf(),
     projectStability: options.projectStability.valueOf(),
   };
