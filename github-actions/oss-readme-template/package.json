@@ -23,13 +23,20 @@
     "setup"
   ],
   "author": "",
-  "license": "MIT",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "dependencies": {
-    "@actions/core": "^1.6.0"
+    "@actions/core": "^1.6.0",
+    "markdownlint": "^0.26.0",
+    "nunjucks": "3.2.3"
   },
   "devDependencies": {
     "@types/jest": "^28.1.6",
+    "@types/markdownlint": "^0.18.0",
     "@types/node": "^16.10.5",
+    "@types/nunjucks": "^3.2.1",
     "@typescript-eslint/parser": "^5.8.1",
     "@vercel/ncc": "^0.31.1",
     "eslint": "^8.19.0",
