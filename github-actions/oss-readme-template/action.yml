@@ -1,11 +1,21 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Momento SDK README generator'
+description: 'Processes a README template for a Momento SDK, inserts standardized header etc.'
+author: 'Momento'
 inputs:
-  milliseconds: # change this
+  project_status:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'official or incubating'
+  project_stability:
+    required: true
+    description: 'alpha, beta, stable'
+  template_file:
+    required: false
+    description: 'path to readme template file'
+    default: 'README.template.md'
+  output_file:
+    required: false
+    description: 'output file path to write generated README'
+    default: 'README.md'
 runs:
   using: 'node16'
   main: 'dist/index.js'

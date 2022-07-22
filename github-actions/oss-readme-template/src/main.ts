@@ -1,26 +1,42 @@
 import * as core from '@actions/core';
-import {wait} from './wait';
+import {generateReadmeFileFromTemplateFile} from './readme';
+import {validateProjectStability, validateProjectStatus} from './inputs';
 
-async function run(): Promise<void> {
+function run(): void {
   try {
-    const ms: string = core.getInput('milliseconds');
-    core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const projectStatus = validateProjectStatus(
+      core.getInput('project_status', {required: true, trimWhitespace: true})
+    );
+    const projectStability = validateProjectStability(
+      core.getInput('project_stability', {required: true, trimWhitespace: true})
+    );
 
-    core.debug(new Date().toTimeString());
-    await wait(parseInt(ms, 10));
-    core.debug(new Date().toTimeString());
+    const templateFile = core.getInput('template_file', {
+      required: false,
+      trimWhitespace: true,
+    });
 
-    core.setOutput('time', new Date().toTimeString());
+    const outputFile = core.getInput('output_file', {
+      required: false,
+      trimWhitespace: true,
+    });
+
+    core.info(`
+Generating Momento OSS README
+         input file: ${templateFile}
+        output file: ${outputFile}
+     project status: ${projectStatus}
+  project stability: ${projectStability}
+`);
+    generateReadmeFileFromTemplateFile({
+      templateFile: templateFile,
+      outputFile: outputFile,
+      projectStatus: projectStatus,
+      projectStability: projectStability,
+    });
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }
 }
 
-run()
-  .then(() => {
-    console.log('success!!');
-  })
-  .catch(e => {
-    console.error('Uncaught exception while running readme generator', e);
-    throw e;
-  });
+run();
