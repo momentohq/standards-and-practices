@@ -56,6 +56,7 @@ export function generateReadmeStringFromTemplateString(
       'no-trailing-spaces': false,
       'first-line-heading': false,
       'line-length': false,
+      'no-trailing-punctuation': false,
     },
     customRules: [
       // This rule enforces that the template must begin with an {{ ossHeader }} tag so that we can insert a consistent
