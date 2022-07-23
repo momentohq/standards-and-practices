@@ -11,7 +11,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: momentohq/standards-and-practices/github-actions/oss-readme-template@initial-gh-action-template.cprice-fork1
+    - uses: momentohq/standards-and-practices/github-actions/oss-readme-template@gh-actions-v1
       with:
         project_status: "${{  inputs.project_status }}"
         project_stability: "${{ inputs.project_stability }}"
@@ -31,8 +31,8 @@ runs:
         file_pattern: README.md
 
         # Optional commit user and author settings
-        commit_user_name: Momento GitHub Actions Bot 
-        commit_user_email: github-actions-bot@momenthohq.com 
+        commit_user_name: Momento GitHub Actions Bot
+        commit_user_email: github-actions-bot@momenthohq.com
 
         # Optional. Option used by `git-status` to determine if the repository is
         # dirty. See https://git-scm.com/docs/git-status#_options
