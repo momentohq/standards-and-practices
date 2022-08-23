@@ -1,0 +1,12 @@
+name: 'Momento Shared Build Action'
+description: 'Buill actions that are shared by our OSS and services'
+author: 'Momento'
+
+runs:
+  using: 'composite'
+  steps:
+    # Please look up the latest version from
+    # https://github.com/amannn/action-semantic-pull-request/releases
+    - uses: amannn/action-semantic-pull-request@v3.4.5
+      with:
+        validateSingleCommit: true
