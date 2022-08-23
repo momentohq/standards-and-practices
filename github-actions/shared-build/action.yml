@@ -4,7 +4,7 @@ author: 'Momento'
 inputs:
   github_token:
     required: true
-    description: '${{ secrets.GITHUB_TOKEN }}'
+    description: "secrets.GITHUB_TOKEN"
 runs:
   using: 'composite'
     steps:
