@@ -7,11 +7,11 @@ inputs:
     description: "secrets.GITHUB_TOKEN"
 runs:
   using: 'composite'
-    steps:
-      # Please look up the latest version from
-      # https://github.com/amannn/action-semantic-pull-request/releases
-      - uses: amannn/action-semantic-pull-request@v3.4.5
-        env:
-          GITHUB_TOKEN: ${{ inputs.github_token }}
-        with:
-          validateSingleCommit: true
+  steps:
+    # Please look up the latest version from
+    # https://github.com/amannn/action-semantic-pull-request/releases
+    - uses: amannn/action-semantic-pull-request@v3.4.5
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      with:
+        validateSingleCommit: true
