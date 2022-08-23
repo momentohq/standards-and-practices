@@ -1,0 +1,147 @@
+<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+
+# Momento Client SDKs Specification: Client Configuration
+
+This document provides information on how Momento client implementations must expose configuration options to users.
+
+All code in this example repo is TypeScript pseudocode.  Implementations should use the appropriate idioms for the
+programming language at hand.
+
+# Tenets
+
+The overarching goals of the specification are:
+
+* Configuration should be as simple as possible for users.  We do testing and tuning work up front to make sure
+  have established high-confidence default settings that cover the 90% use case, so that users don't have to spend
+  time figuring it out themselves.
+* Because there are different requirements for different environments (e.g. dev vs. prod), we provide a small handful of
+  pre-built configurations that users can choose from, out-of-the box.
+* Configurations must be specified as interfaces, so that alternate implementations can be added over time.
+* Users should always have a last-resort option of manually tuning the settings themselves, in case there are special
+  cases that our defaults are not quite right for.
+
+# Choosing a configuration
+
+The `SimpleCacheClient` constructor should accept a required argument whose type is our `Configuration` interface.  e.g.:
+
+```typescript
+import * as config from '@gomomento/sdk/config';
+
+const client = SimpleCacheClient({config: config.Dev.latest()});
+```
+
+# Pre-built Configuration Objects
+
+## Requirements for each pre-built configuration objects
+
+Each SDK must provide a namespace (via the idiomatic construct in the relevant programming language) that contains
+an enumerated list of pre-built configuration objects.
+
+All configuration objects must provide a `latest()` function that returns the latest "blessed" defaults from Momento.
+Documentation must clearly indicate that these values may change over time if Momento finds in the future that some
+different default values will provide a better or more performant user experience.
+
+All configuration objects must also provide a `default()` function that returns the original "blessed" defaults from
+Momento.  Documentation must clearly state that these values will not change over time; users can rely on them to
+be stable across new minor version releases of the SDKs.
+
+The `SimpleCacheClient` constructor should expose a required argument that is an instance of
+
+## Required pre-built configuration objects
+
+Each SDK must provide at least the following out-of-the-box configuration objects:
+
+```typescript
+import * as config from '@gomomento/sdk/config';
+
+/**
+ * Dev provides defaults suitable for a medium-to-high-latency dev environment.  Permissive timeouts, retries, potentially
+ * a higher number of connections, etc.
+ */
+const devConfig = config.Dev.latest();
+
+/**
+ * ProdLowLatency provides defaults suitable for a low-latency prod environment.  This is for the use case where the
+ * client is running on an application server in the same region as the Momento service.  It has more agressive timeouts
+ * and retry behavior, to ensure that cache unavailability doesn't force unacceptably high application latencies.
+ */
+const prodConfig = config.ProdLowLatency.latest();
+```
+
+## Configuration interface
+
+The configuration interface provides nested objects for retry strategy, middleware, and transport:
+
+```typescript
+interface Configuration {
+  retryStrategy: RetryStrategy,
+  middleware: Middleware,
+  transportStrategy: TransportStrategy
+}
+```
+
+### RetryStrategy
+
+The `RetryStrategy` provides a function that is called when a request fails.  This function is responsible for determining
+whether the request should be retried, and if so, how long the client should delay before retrying:
+
+```typescript
+interface RetryStrategy {
+  /**
+   * Returns the number of milliseconds after which the request should be retried, or `undefined` if the request should
+   * not be retried.  `0` means retry immediately.
+   */
+  determineWhenToRetryRequest(grpcResult: GrpcResult, grpcRequest: GrpcRequest, attemptNumber: number): Promise<number | undefined>;
+}
+```
+
+The simplest default implementation of this strategy can expose a `maxAttempts` integer, and always return `0` for
+immediate retries until the maximum number of attempts is reached.  A slightly more sophisticated initial implementation
+would have basic support for exponential backoff and jitter.
+
+### Middleware
+
+The `Middleware` interface allows the Configuration to provide a higher-order function that wraps all requests.  This
+allows future support for things like client-side metrics or other diagnostics helpers.
+
+```typescript
+interface Middleware {
+  wrapRequest(middlewareFn: (GrpcRequest) => GrpcResult): GrpcResult;
+}
+```
+
+### TransportStrategy
+
+The `TransportStrategy` is responsible for configuring network tunables.  We intend to abstract gRPC away from
+users as much as possible, but we will need to provide different gRPC configurations for dev vs. prod environments.
+And ultimately we will need to support advanced customers who need to mess with these knobs.
+
+```typescript
+interface TransportStrategy {
+  grpcConfig: GrpcConfiguration
+}
+
+interface GrpcConfiguration {
+  numChannels(): number
+
+  // These interface functions expose individual settings for gRPC channels.  They are just here to ensure that
+  // strategy implementations provide values for settings that we know to be important.  These may vary by language
+  // since the gRPC implementations in each language have subtly different behaviors.
+  maxSessionMemory(): number
+  useLocalSubChannelPool(): boolean
+
+  // This is a map that encapsulates the settings above, and may also include other channel-specific settings.
+  // This allows strategy implementations to provide gRPC config key/value pairs for any available setting, even
+  // if it's not one we've explicitly tried / recommended.  The strategy implementation should implement this by
+  // calling the functions above, along with allowing a mechanism for specifying additional key/value pairs.
+  grpcChannelConfig(): Record<string, string>
+}
+```
+
+# Guidelines for adding new strategies to the Configuration interface
+
+In the event that we discover new strategies that we need to add to the interface, we must ensure that users that
+have implemented custom configurations will not face compile or runtime errors after taking a minor version upgrade
+to the SDK.  Therefore, new strategies must provide a default implementation (and thus may not be a required
+argument to the Configuration constructor), or we must do a major version bump on the SDK.
+
