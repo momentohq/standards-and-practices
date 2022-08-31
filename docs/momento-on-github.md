@@ -35,3 +35,10 @@ Here is a list of the different Project Statuses that our open source projects m
 | ![stable](./badges/project-stability-stable.svg)       | Stable means "use it even in most conservative scenarios": It’s done. We will be evolving it according to our strict backward compatibility rules.                                                                                                                                                                              |
 
 (Special thanks to the [Kotlin](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained) team for inspiration for our badge scheme!)
+
+## Repo Topics
+Github has the ability to add [topics](https://github.com/topics) to github repos to help with discoverability. We should be try to standardize the topics we have on each repo. This table is meant to be the source of truth for mandatory topics we want added on our repos
+
+|Topic|RepoType|CurrentRepos|
+|---|---|---|
+|`sdk`|Any Client SDK Repos|[Link](https://github.com/search?q=topic%3Asdk+org%3Amomentohq+fork%3Atrue&type=repositories)|
