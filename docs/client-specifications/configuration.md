@@ -27,7 +27,7 @@ The `SimpleCacheClient` constructor should accept a required argument whose type
 ```typescript
 import * as config from '@gomomento/sdk/config';
 
-const client = SimpleCacheClient({config: config.Dev.latest()});
+const client = SimpleCacheClient({config: config.Laptop.latest()});
 ```
 
 # Pre-built Configuration Objects
@@ -45,8 +45,6 @@ All configuration objects must also provide a `default()` function that returns 
 Momento.  Documentation must clearly state that these values will not change over time; users can rely on them to
 be stable across new minor version releases of the SDKs.
 
-The `SimpleCacheClient` constructor should expose a required argument that is an instance of
-
 ## Required pre-built configuration objects
 
 Each SDK must provide at least the following out-of-the-box configuration objects:
@@ -55,17 +53,25 @@ Each SDK must provide at least the following out-of-the-box configuration object
 import * as config from '@gomomento/sdk/config';
 
 /**
- * Dev provides defaults suitable for a medium-to-high-latency dev environment.  Permissive timeouts, retries, potentially
+ * Laptop config provides defaults suitable for a medium-to-high-latency dev environment.  Permissive timeouts, retries, potentially
  * a higher number of connections, etc.
  */
-const devConfig = config.Dev.latest();
+const devConfig = config.Laptop.latest();
 
 /**
- * ProdLowLatency provides defaults suitable for a low-latency prod environment.  This is for the use case where the
- * client is running on an application server in the same region as the Momento service.  It has more agressive timeouts
- * and retry behavior, to ensure that cache unavailability doesn't force unacceptably high application latencies.
+ * InRegion provides defaults suitable for an environment where your client is running in the same region as the Momento
+ * service.  It has more agressive timeouts and retry behavior than the Laptop config.
+ * 
+ * The InRegion.Default config prioritizes throughput and client resource utilization.
  */
-const prodConfig = config.ProdLowLatency.latest();
+const prodConfig = config.InRegion.Default.latest();
+
+/**
+ * The InRegion.LowLatency config prioritizes keeping p99.9 latencies as low as possible, potentially sacrificing
+ * some throughput to achieve this.  Use this configuration if the most important factor is to ensure that cache
+ * unavailability doesn't force unacceptably high latencies for your own application.
+ */
+const prodLowLatencyConfig = config.InRegion.LowLatency.latest();
 ```
 
 ## Configuration interface
@@ -75,7 +81,7 @@ The configuration interface provides nested objects for retry strategy, middlewa
 ```typescript
 interface Configuration {
   retryStrategy: RetryStrategy,
-  middleware: Middleware,
+  middlewares: Array<Middleware>,
   transportStrategy: TransportStrategy
 }
 ```
@@ -118,24 +124,72 @@ And ultimately we will need to support advanced customers who need to mess with 
 
 ```typescript
 interface TransportStrategy {
-  grpcConfig: GrpcConfiguration
+  maxConcurrentRequests: number;
+  grpcConfig: GrpcConfiguration;
 }
 
 interface GrpcConfiguration {
-  numChannels(): number
+  numChannels(): number;
 
   // These interface functions expose individual settings for gRPC channels.  They are just here to ensure that
   // strategy implementations provide values for settings that we know to be important.  These may vary by language
   // since the gRPC implementations in each language have subtly different behaviors.
-  maxSessionMemory(): number
-  useLocalSubChannelPool(): boolean
+  maxSessionMemory(): number;
+  useLocalSubChannelPool(): boolean;
 
   // This is a map that encapsulates the settings above, and may also include other channel-specific settings.
   // This allows strategy implementations to provide gRPC config key/value pairs for any available setting, even
   // if it's not one we've explicitly tried / recommended.  The strategy implementation should implement this by
   // calling the functions above, along with allowing a mechanism for specifying additional key/value pairs.
-  grpcChannelConfig(): Record<string, string>
+  grpcChannelConfig(): Record<string, string>;
 }
+```
+
+# Advanced Configuration Examples
+
+In this section we expand a bit on how a customer might define their own advanced configuration if they want to
+opt out of our pre-builts.
+
+Here is a sketch of what the implementation of one of the pre-built configurations might look like inside of the
+SDK (users can see the source code for this if they like):
+
+```typescript
+namespace InRegion {
+  export class LowLatency {
+    static latest(): Configuration {
+      return {
+        retryStrategy: new ExponentialBackoffStrategy({
+          maxAttempts: 3,
+          backoffMilliseconds: 0.5,
+          jitterMilliseconds: 0.5,
+          exponentialBackoffFactor: 2,
+        }),
+        middlewares: [], // TODO: this could eventually include some basic client-side metrics OOTB
+        transportStrategy: {
+          maxConcurrentRequests: 2,
+          grpcConfig: new BasicGrpcConfiguration({
+            numChannels: 5
+          })
+        }
+      }
+    }
+  }
+}
+```
+
+If a customer wishes to override the defaults, they can do something like this:
+
+```typescript
+const myConfig = configs.InRegion.LowLatency.latest()
+  .withTransportStrategy({
+    maxConcurrentRequests: 2,
+    grpcConfig: new BasicGrpcConfiguration({
+      numChannels: 5,
+      additionalGrpcChannelSettings: {
+              'foo': 'bar'
+      }
+    })
+  })
 ```
 
 # Guidelines for adding new strategies to the Configuration interface
@@ -144,4 +198,3 @@ In the event that we discover new strategies that we need to add to the interfac
 have implemented custom configurations will not face compile or runtime errors after taking a minor version upgrade
 to the SDK.  Therefore, new strategies must provide a default implementation (and thus may not be a required
 argument to the Configuration constructor), or we must do a major version bump on the SDK.
-
