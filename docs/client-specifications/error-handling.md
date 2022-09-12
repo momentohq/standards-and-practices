@@ -111,7 +111,7 @@ if (result.status === CreateCacheStatus.SUCCESS) {
 ## `Get` and similar operations
 
 The `Get` return value should have a `status` field, whose value is an enumeration including `HIT`, `MISS` and `ERROR`.
-If the status is `ERROR`, then a `.error` field of type `Error` should be available:
+If the status is `ERROR`, then a `.error` field of type `Error` MUST be available:
 
 ```typescript
 const result = client.get('myCache', 'myKey');
