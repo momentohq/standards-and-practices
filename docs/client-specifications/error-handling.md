@@ -104,7 +104,7 @@ If the status is `ERROR`, then a `.error` field of type `Error` should be availa
 const result = client.createCache("myCache");
 if (result.status === CreateCacheStatus.SUCCESS) {
   console.log(`Cache created`);
-} else {
+} else if (result.status === CreateCacheStatus.ERROR) {
   const error = result.error;
   console.log(`An error occurred while attempting to create cache 'myCache': ${error.message}`);
 } else {
@@ -126,6 +126,8 @@ if (result.status === CacheGetStatus.HIT) {
 } else if (result.status === CacheGetStatus.ERROR) {
   const error = result.error;
   console.log(`An error occurred while attempting to get key 'myKey' from cache 'myCache': ${error.message}`);
+} else {
+  console.log(`Something unexpected occurred while attempting to get key 'myKey' from cache 'myCache': ${result}`);
 }
 ```
 
