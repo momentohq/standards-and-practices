@@ -20,6 +20,8 @@ The overarching goals of the specification are:
   IDE.
 * This approach must not require a user to write more lines of code than they would if we were using a `try`/`catch`
   paradigm.
+* Our response objects are always safely printable.  "Safely" means they don't show the contents of the item but they do 
+  show the details of the response. A HIT or MISS will be brief while an error may include a traceback.
 * All error types must be easily distinguishable from one another in code, without resorting to runtime type checking or
   pattern matching against message strings.
 * SDKs must make a best effort to use heuristics to distinguish between client and server side errors, and make the
@@ -105,6 +107,8 @@ if (result.status === CreateCacheStatus.SUCCESS) {
 } else {
   const error = result.error;
   console.log(`An error occurred while attempting to create cache 'myCache': ${error.message}`);
+} else {
+  console.log(`Something unexpected happened while attempting to create cache 'myCache': ${result}`);
 }
 ```
 
