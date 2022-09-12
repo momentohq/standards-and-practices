@@ -11,3 +11,5 @@ foo sub
 # Bar  
 
 STATIC CONTENT
+
+{{ ossFooter }}

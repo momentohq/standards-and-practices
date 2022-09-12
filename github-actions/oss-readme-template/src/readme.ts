@@ -2,12 +2,20 @@ import * as nunjucks from 'nunjucks';
 import * as fs from 'fs';
 import * as markdownlint from 'markdownlint';
 import {Options as MarkdownLintOptions} from 'markdownlint';
-import {ProjectStability, ProjectStatus} from './inputs';
-import {mustBeginWithOssHeader} from './markdownlint-rules/rule-must-begin-with-oss-header';
+import {
+  ProjectInfo,
+  ProjectStability,
+  ProjectStatus,
+  ProjectType,
+  SdkProject,
+} from './inputs';
+import {mustIncludeOssHeaders} from './markdownlint-rules/must-include-oss-headers';
+import {verifySdkSectionHeaders} from './markdownlint-rules/verify-sdk-section-headers';
 
 export interface ReadmeFileGeneratorOptions {
   templateFile: string;
   outputFile: string;
+  projectInfo: ProjectInfo;
   projectStatus: ProjectStatus;
   projectStability: ProjectStability;
 }
@@ -18,6 +26,7 @@ export function generateReadmeFileFromTemplateFile(
   const templateContents = fs.readFileSync(options.templateFile).toString();
   const outputContents = generateReadmeStringFromTemplateString({
     templateContents: templateContents,
+    projectInfo: options.projectInfo,
     projectStatus: options.projectStatus,
     projectStability: options.projectStability,
   });
@@ -26,6 +35,7 @@ export function generateReadmeFileFromTemplateFile(
 
 interface ReadmeStringGeneratorOptions {
   templateContents: string;
+  projectInfo: ProjectInfo;
   projectStatus: ProjectStatus;
   projectStability: ProjectStability;
 }
@@ -36,6 +46,8 @@ interface HeaderTemplateContext {
   projectStability: string;
 }
 
+//TODO: we could move these templates to files if it ends up feeling easier to maintain that way.
+
 const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
 
 [![project status](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-status-{{ projectStatus }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md)
@@ -44,7 +56,30 @@ const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/log
 
 interface ReadmeTemplateContext {
   ossHeader: string;
+  ossFooter: string;
 }
+
+const OSS_SDK_HEADER_TEMPLATE = `
+# Momento {{ sdkLanguage }} Client Library
+
+{{ stabilityNotes }}
+{{ sdkLanguage }} client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
+any of the operational overhead required by traditional caching solutions!
+
+`;
+
+interface SdkHeaderTemplateContext {
+  sdkLanguage: string;
+  stabilityNotes: string;
+}
+
+const OSS_FOOTER_TEMPLATE = `
+----------------------------------------------------------------------------------------
+For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
+`.trim();
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface OssFooterTemplateContext {}
 
 export function generateReadmeStringFromTemplateString(
   options: ReadmeStringGeneratorOptions
@@ -61,8 +96,8 @@ export function generateReadmeStringFromTemplateString(
     customRules: [
       // This rule enforces that the template must begin with an {{ ossHeader }} tag so that we can insert a consistent
       // header.
-      mustBeginWithOssHeader,
-      // TODO: add more rules, e.g. to enforce that h1's exist in a consistent order for SDKs
+      mustIncludeOssHeaders,
+      ...additionalRulesForProjectType(options.projectInfo.type),
     ],
     strings: {README_template: options.templateContents},
   };
@@ -86,10 +121,102 @@ export function generateReadmeStringFromTemplateString(
     projectStatus: options.projectStatus.valueOf(),
     projectStability: options.projectStability.valueOf(),
   };
-  const ossHeader = nunjucks.renderString(ossHeaderTemplate, headerContext);
+  let ossHeader = nunjucks.renderString(ossHeaderTemplate, headerContext);
+
+  if (options.projectInfo.type === ProjectType.SDK) {
+    const sdkProject = options.projectInfo as SdkProject;
+    const sdkHeaderTemplate = OSS_SDK_HEADER_TEMPLATE;
+
+    const stabilityNotes = getSdkStabilityNotes(
+      options.projectStatus,
+      options.projectStability
+    );
+
+    const sdkHeaderContext: SdkHeaderTemplateContext = {
+      sdkLanguage: sdkProject.language,
+      stabilityNotes: stabilityNotes,
+    };
+    ossHeader += nunjucks.renderString(sdkHeaderTemplate, sdkHeaderContext);
+  }
+
+  const ossFooterTemplate = OSS_FOOTER_TEMPLATE;
+  const ossFooterContext: OssFooterTemplateContext = {};
+  const ossFooter = nunjucks.renderString(ossFooterTemplate, ossFooterContext);
 
   const templateContext: ReadmeTemplateContext = {
     ossHeader: ossHeader,
+    ossFooter: ossFooter,
   };
   return nunjucks.renderString(options.templateContents, templateContext);
+}
+
+function additionalRulesForProjectType(
+  projectType: ProjectType
+): Array<markdownlint.Rule> {
+  if (projectType === ProjectType.SDK) {
+    return [verifySdkSectionHeaders];
+  } else if (projectType === ProjectType.OTHER) {
+    return [];
+  } else {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new Error(`Unsupported project type: ${projectType}`);
+  }
+}
+
+function getSdkStabilityNotes(
+  status: ProjectStatus,
+  stability: ProjectStability
+): string {
+  switch (status) {
+    case ProjectStatus.OFFICIAL:
+      return getOfficialSdkStabilityNotes(stability);
+    case ProjectStatus.INCUBATING:
+      return getIncubatingSdkStabilityNotes();
+    default:
+      throw new Error(`Unrecognized project status: ${JSON.stringify(status)}`);
+  }
+}
+
+function getOfficialSdkStabilityNotes(stability: ProjectStability): string {
+  switch (stability) {
+    case ProjectStability.EXPERIMENTAL:
+      return `
+:warning: Experimental SDK :warning:
+
+This is an official Momento SDK, but the API is in an early experimental stage and subject to backward-incompatible
+changes.  For more info, click on the experimental badge above.
+
+`;
+    case ProjectStability.ALPHA:
+      return `
+:warning: Alpha SDK :warning:
+
+This is an official Momento SDK, but the API is in an alpha stage and may be subject to backward-incompatible
+changes.  For more info, click on the alpha badge above.
+
+`;
+    case ProjectStability.BETA:
+      return `
+:warning: Beta SDK :warning:
+
+This is an official Momento SDK, but the API is in a beta stage.  For more info, click on the beta badge above.
+
+`;
+    case ProjectStability.STABLE:
+      return '';
+    default:
+      throw new Error(
+        `Unrecognized project stability: ${JSON.stringify(stability)}`
+      );
+  }
+}
+
+function getIncubatingSdkStabilityNotes(): string {
+  return `
+:warning: Experimental SDK :warning:
+
+This is an incubating project; it may or may not achieve official supported status, and the APIs are subject to
+backward incompatible changes.  For more info, click on the incubating badge above.
+
+`;
 }

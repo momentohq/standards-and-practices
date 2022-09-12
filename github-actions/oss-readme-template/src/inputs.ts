@@ -1,5 +1,23 @@
 import {enumFromValue} from './enums';
 
+export enum ProjectType {
+  SDK = 'sdk',
+  OTHER = 'other',
+}
+
+export interface ProjectInfo {
+  type: ProjectType;
+}
+
+export interface SdkProject extends ProjectInfo {
+  type: ProjectType.SDK;
+  language: string;
+}
+
+export interface OtherProject extends ProjectInfo {
+  type: ProjectType.OTHER;
+}
+
 export enum ProjectStatus {
   OFFICIAL = 'official',
   INCUBATING = 'incubating',
@@ -10,6 +28,10 @@ export enum ProjectStability {
   ALPHA = 'alpha',
   BETA = 'beta',
   STABLE = 'stable',
+}
+
+export function validateProjectType(projectType: string): ProjectType {
+  return enumFromValue(ProjectType, projectType) as unknown as ProjectType;
 }
 
 export function validateProjectStatus(status: string): ProjectStatus {
