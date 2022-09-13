@@ -22,7 +22,6 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
     let headerOpenLineNumber = 1;
     let currentContent: string | undefined = undefined;
     for (const token of params.tokens) {
-      // console.log(`TYPE: '${token.type}'`);
       if (!insideHeaderOpenTag) {
         if (token.type === 'heading_open') {
           insideHeaderOpenTag = true;
