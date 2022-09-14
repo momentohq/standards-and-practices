@@ -14,7 +14,7 @@ The overarching goals of the specification are:
 * Configuration should be as simple as possible for users.  We do testing and tuning work up front to make sure
 we have established high-confidence default settings that cover the 90% use case, so that users don't have to spend
   time figuring it out themselves.
-* Because there are different requirements for different environments (e.g. dev vs. prod), we provide a small handful of
+* Because there are different requirements for different environments (e.g. laptop vs. in-region), we provide a small handful of
   pre-built configurations that users can choose from, out-of-the box.
 * Configurations must be specified as interfaces, so that alternate implementations can be added over time.
 * Users should always have a last-resort option of manually tuning the settings themselves, in case there are special
