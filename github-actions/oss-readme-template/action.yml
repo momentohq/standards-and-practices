@@ -2,6 +2,9 @@ name: 'Momento SDK README generator'
 description: 'Processes a README template for a Momento SDK, inserts standardized header etc.'
 author: 'Momento'
 inputs:
+  project_type:
+    required: true
+    description: 'sdk or other'
   project_status:
     required: true
     description: 'official or incubating'
