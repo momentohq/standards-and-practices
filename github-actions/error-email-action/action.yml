@@ -1,0 +1,35 @@
+name: 'Momento OSS Error Email'
+description: "Sends an email to dev eco team when a build fails"
+inputs:
+  username:
+    required: true
+  password:
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: dawidd6/action-send-mail@v3
+      with:
+        # Required mail server address:
+        server_address: smtp.gmail.com
+        # Required mail server port:
+        server_port: 465
+        # Optional (recommended): mail server username:
+        username: ${{inputs.username}}
+        # Optional (recommended) mail server password:
+        password: ${{inputs.password}}
+        # Required mail subject:
+        subject: Momento OSS Build failed - ${{ github.job }}
+        # Required recipients' addresses:
+        to: eng-deveco@momentohq.com
+        # Required sender full name (address can be skipped):
+        from: Momento OSS
+        # Optional whether this connection use TLS (default is true if server_port is 465)
+        secure: true
+        # Optional plain body:
+        body: |
+          "${{github.job}}" build job of "${{github.repository}}", branch "${{ github.head_ref || github.ref_name }}" failed!
+          See ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} for details.
+
+        # Optional unsigned/invalid certificates allowance:
+        ignore_cert: true
