@@ -21,6 +21,8 @@ runs:
       with:
         project_status: "${{  inputs.project_status }}"
         project_stability: "${{ inputs.project_stability }}"
+        project_type: "${{ inputs.project_type }}"
+        sdk_language: "${{ inputs.project_language }}"
     - shell: bash
       run: |
         git status
