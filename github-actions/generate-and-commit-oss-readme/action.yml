@@ -8,6 +8,12 @@ inputs:
   project_stability:
     required: true
     description: 'experimental, alpha, beta, stable'
+  project_type:
+    required: true
+    description: 'sdk, other'
+  sdk_language:
+    required: false
+    description: 'JavaScript, Python, etc.'
 runs:
   using: 'composite'
   steps:
