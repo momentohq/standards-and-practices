@@ -5,6 +5,9 @@ inputs:
   project_type:
     required: true
     description: 'sdk or other'
+  sdk_language:
+    required: false
+    description: 'JavaScript, Python, etc.'
   project_status:
     required: true
     description: 'official or incubating'
