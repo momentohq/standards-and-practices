@@ -63,11 +63,11 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
       },
       {
         tag: 'h3',
-        content: 'Installing Momento and Running the Example',
+        content: 'Installation',
       },
       {
         tag: 'h3',
-        content: 'Using Momento',
+        content: 'Usage',
       },
     ];
 

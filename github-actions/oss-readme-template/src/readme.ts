@@ -18,6 +18,7 @@ export interface ReadmeFileGeneratorOptions {
   projectInfo: ProjectInfo;
   projectStatus: ProjectStatus;
   projectStability: ProjectStability;
+  usageExamplePath: string;
 }
 
 export function generateReadmeFileFromTemplateFile(
@@ -29,6 +30,7 @@ export function generateReadmeFileFromTemplateFile(
     projectInfo: options.projectInfo,
     projectStatus: options.projectStatus,
     projectStability: options.projectStability,
+    usageExamplePath: options.usageExamplePath,
   });
   fs.writeFileSync(options.outputFile, outputContents);
 }
@@ -38,6 +40,7 @@ interface ReadmeStringGeneratorOptions {
   projectInfo: ProjectInfo;
   projectStatus: ProjectStatus;
   projectStability: ProjectStability;
+  usageExamplePath: string;
 }
 
 interface HeaderTemplateContext {
@@ -57,6 +60,7 @@ const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/log
 interface ReadmeTemplateContext {
   ossHeader: string;
   ossFooter: string;
+  ossUsageExamplePath: string;
 }
 
 const OSS_SDK_HEADER_TEMPLATE = `
@@ -72,6 +76,8 @@ interface SdkHeaderTemplateContext {
   sdkLanguage: string;
   stabilityNotes: string;
 }
+
+const OSS_SDK_USAGE_EXAMPLE_PATH_TEMPLATE = `Check out usage example [here]({{ usageExamplePath }})`;
 
 const OSS_FOOTER_TEMPLATE = `
 ----------------------------------------------------------------------------------------
@@ -122,6 +128,7 @@ export function generateReadmeStringFromTemplateString(
     projectStability: options.projectStability.valueOf(),
   };
   let ossHeader = nunjucks.renderString(ossHeaderTemplate, headerContext);
+  let ossUsageExamplePath = '';
 
   if (options.projectInfo.type === ProjectType.SDK) {
     const sdkProject = options.projectInfo as SdkProject;
@@ -137,6 +144,15 @@ export function generateReadmeStringFromTemplateString(
       stabilityNotes: stabilityNotes,
     };
     ossHeader += nunjucks.renderString(sdkHeaderTemplate, sdkHeaderContext);
+
+    const sdkUsageExamplePathTemplate = OSS_SDK_USAGE_EXAMPLE_PATH_TEMPLATE;
+    const usageExamplePathContext = {
+      usageExamplePath: options.usageExamplePath,
+    };
+    ossUsageExamplePath = nunjucks.renderString(
+      sdkUsageExamplePathTemplate,
+      usageExamplePathContext
+    );
   }
 
   const ossFooterTemplate = OSS_FOOTER_TEMPLATE;
@@ -146,6 +162,7 @@ export function generateReadmeStringFromTemplateString(
   const templateContext: ReadmeTemplateContext = {
     ossHeader: ossHeader,
     ossFooter: ossFooter,
+    ossUsageExamplePath: ossUsageExamplePath,
   };
   return nunjucks.renderString(options.templateContents, templateContext);
 }

@@ -35,6 +35,11 @@ function run(): void {
       trimWhitespace: true,
     });
 
+    const usageExamplePath = core.getInput('usage_example_path', {
+      required: false,
+      trimWhitespace: true,
+    });
+
     core.info(`
 Generating Momento OSS README
          input file: ${templateFile}
@@ -42,6 +47,7 @@ Generating Momento OSS README
        project info: ${JSON.stringify(projectInfo)}
      project status: ${projectStatus}
   project stability: ${projectStability}
+  usage example path: ${usageExamplePath}
 `);
     generateReadmeFileFromTemplateFile({
       templateFile: templateFile,
@@ -49,6 +55,7 @@ Generating Momento OSS README
       projectInfo: projectInfo,
       projectStatus: projectStatus,
       projectStability: projectStability,
+      usageExamplePath: usageExamplePath,
     });
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);

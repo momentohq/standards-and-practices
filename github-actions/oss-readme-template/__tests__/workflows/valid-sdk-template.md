@@ -6,12 +6,12 @@
 
 My Awesome Requirements
 
-### Installing Momento and Running the Example
+### Installation
 
 My Awesome Examples
 
-### Using Momento
+### Usage
 
-My Awesome Hello World Code
+{{ ossUsageExamplePath }}
 
 {{ ossFooter }}
