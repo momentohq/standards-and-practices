@@ -71,7 +71,7 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectInfo: {type: ProjectType.OTHER},
         projectStatus: ProjectStatus.INCUBATING,
         projectStability: ProjectStability.EXPERIMENTAL,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       });
     })
       .toThrowError(`README template does not conform to Momento OSS requirements:
@@ -95,7 +95,7 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     )
       .toEqual(`<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
@@ -137,7 +137,7 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.INCUBATING,
         projectStability: ProjectStability.EXPERIMENTAL,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Experimental SDK :warning:
 
@@ -152,7 +152,7 @@ backward incompatible changes.  For more info, click on the incubating badge abo
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.EXPERIMENTAL,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Experimental SDK :warning:
 
@@ -167,7 +167,7 @@ changes.  For more info, click on the experimental badge above.`);
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.ALPHA,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Alpha SDK :warning:
 
@@ -182,7 +182,7 @@ changes.  For more info, click on the alpha badge above.`);
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.BETA,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Beta SDK :warning:
 
@@ -204,7 +204,7 @@ This is an official Momento SDK, but the API is in a beta stage.  For more info,
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     ).toThrowError(
       /Expected to find next header with content 'Requirements', found 'FOO'/
@@ -236,7 +236,7 @@ My Awesome Examples
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
-          usageExamplePath: './examples'
+        usageExamplePath: './examples',
       })
     ).toThrowError(
       /Expected to find next header with content 'Installation', found 'Usage'/

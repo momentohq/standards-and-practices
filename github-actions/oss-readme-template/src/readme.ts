@@ -77,7 +77,8 @@ interface SdkHeaderTemplateContext {
   stabilityNotes: string;
 }
 
-const OSS_SDK_USAGE_EXAMPLE_PATH_TEMPLATE = `Check out usage example [here]({{ usageExamplePath }})`;
+const OSS_SDK_USAGE_EXAMPLE_PATH_TEMPLATE =
+  'Check out usage example [here]({{ usageExamplePath }})';
 
 const OSS_FOOTER_TEMPLATE = `
 ----------------------------------------------------------------------------------------
