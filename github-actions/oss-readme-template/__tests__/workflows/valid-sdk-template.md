@@ -12,6 +12,12 @@ My Awesome Examples
 
 ### Usage
 
-{{ ossUsageExamplePath }}
+Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
+
+Here is a quickstart you can use in your own project:
+
+```typescript
+{{ usageExampleCode }}
+```
 
 {{ ossFooter }}

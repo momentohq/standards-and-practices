@@ -35,7 +35,6 @@ STATIC CONTENT
       },
       projectStatus: ProjectStatus.INCUBATING,
       projectStability: ProjectStability.BETA,
-      usageExamplePath: './examples',
     });
     expect(output).toEqual(`
 <img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
@@ -71,7 +70,6 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectInfo: {type: ProjectType.OTHER},
         projectStatus: ProjectStatus.INCUBATING,
         projectStability: ProjectStability.EXPERIMENTAL,
-        usageExamplePath: './examples',
       });
     })
       .toThrowError(`README template does not conform to Momento OSS requirements:
@@ -86,6 +84,7 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
   const EXAMPLE_SDK_PROJECT_INFO: SdkProject = {
     type: ProjectType.SDK,
     language: 'WaterLoop',
+    usageExamplePath: path.join(process.cwd(), 'src', 'examples', 'usage.ts'),
   };
 
   it('succeeds for an SDK README that includes all of the expected section headers', () => {
@@ -95,7 +94,6 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
-        usageExamplePath: './examples',
       })
     )
       .toEqual(`<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
@@ -123,7 +121,14 @@ My Awesome Examples
 
 ### Usage
 
-Check out usage example [here](./examples)
+Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
+
+Here is a quickstart you can use in your own project:
+
+\`\`\`typescript
+console.log('Hello world!');
+
+\`\`\`
 
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
@@ -137,7 +142,6 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.INCUBATING,
         projectStability: ProjectStability.EXPERIMENTAL,
-        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Experimental SDK :warning:
 
@@ -152,7 +156,6 @@ backward incompatible changes.  For more info, click on the incubating badge abo
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.EXPERIMENTAL,
-        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Experimental SDK :warning:
 
@@ -167,7 +170,6 @@ changes.  For more info, click on the experimental badge above.`);
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.ALPHA,
-        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Alpha SDK :warning:
 
@@ -182,7 +184,6 @@ changes.  For more info, click on the alpha badge above.`);
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.BETA,
-        usageExamplePath: './examples',
       })
     ).toContain(`:warning: Beta SDK :warning:
 
@@ -204,7 +205,6 @@ This is an official Momento SDK, but the API is in a beta stage.  For more info,
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
-        usageExamplePath: './examples',
       })
     ).toThrowError(
       /Expected to find next header with content 'Requirements', found 'FOO'/
@@ -236,7 +236,6 @@ My Awesome Examples
         projectInfo: EXAMPLE_SDK_PROJECT_INFO,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
-        usageExamplePath: './examples',
       })
     ).toThrowError(
       /Expected to find next header with content 'Installation', found 'Usage'/
