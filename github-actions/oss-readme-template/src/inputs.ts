@@ -12,6 +12,7 @@ export interface ProjectInfo {
 export interface SdkProject extends ProjectInfo {
   type: ProjectType.SDK;
   language: string;
+  usageExamplePath: string;
 }
 
 export interface OtherProject extends ProjectInfo {

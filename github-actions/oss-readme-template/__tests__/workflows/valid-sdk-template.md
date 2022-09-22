@@ -6,12 +6,18 @@
 
 My Awesome Requirements
 
-### Installing Momento and Running the Example
+### Installation
 
 My Awesome Examples
 
-### Using Momento
+### Usage
 
-My Awesome Hello World Code
+Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
+
+Here is a quickstart you can use in your own project:
+
+```typescript
+{{ usageExampleCode }}
+```
 
 {{ ossFooter }}

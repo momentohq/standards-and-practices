@@ -84,6 +84,7 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
   const EXAMPLE_SDK_PROJECT_INFO: SdkProject = {
     type: ProjectType.SDK,
     language: 'WaterLoop',
+    usageExamplePath: path.join(__dirname, 'examples', 'usage.ts'),
   };
 
   it('succeeds for an SDK README that includes all of the expected section headers', () => {
@@ -114,13 +115,20 @@ any of the operational overhead required by traditional caching solutions!
 
 My Awesome Requirements
 
-### Installing Momento and Running the Example
+### Installation
 
 My Awesome Examples
 
-### Using Momento
+### Usage
 
-My Awesome Hello World Code
+Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
+
+Here is a quickstart you can use in your own project:
+
+\`\`\`typescript
+console.log('Hello world!');
+
+\`\`\`
 
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
@@ -215,11 +223,11 @@ This is an official Momento SDK, but the API is in a beta stage.  For more info,
 
 My Awesome Requirements
 
-### Using Momento
+### Usage
 
 My Awesome Hello World Code
 
-### Installing Momento and Running the Example
+### Installation
 
 My Awesome Examples
 
@@ -230,7 +238,7 @@ My Awesome Examples
         projectStability: ProjectStability.STABLE,
       })
     ).toThrowError(
-      /Expected to find next header with content 'Installing Momento and Running the Example', found 'Using Momento'/
+      /Expected to find next header with content 'Installation', found 'Usage'/
     );
   });
 });

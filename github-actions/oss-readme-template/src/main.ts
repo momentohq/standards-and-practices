@@ -61,9 +61,14 @@ function getProjectInfo(projectType: ProjectType): ProjectInfo {
       required: true,
       trimWhitespace: true,
     });
+    const usageExamplePath = core.getInput('usage_example_path', {
+      required: true,
+      trimWhitespace: true,
+    });
     const projectInfo: SdkProject = {
       type: ProjectType.SDK,
       language: sdkLanguage,
+      usageExamplePath: usageExamplePath,
     };
     return projectInfo;
   }

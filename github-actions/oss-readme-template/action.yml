@@ -22,6 +22,9 @@ inputs:
     required: false
     description: 'output file path to write generated README'
     default: 'README.md'
+  usage_example_path:
+    required: false
+    description: 'path to usage example file'
 runs:
   using: 'node16'
   main: 'dist/index.js'

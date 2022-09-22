@@ -57,6 +57,7 @@ const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/log
 interface ReadmeTemplateContext {
   ossHeader: string;
   ossFooter: string;
+  usageExampleCode: string;
 }
 
 const OSS_SDK_HEADER_TEMPLATE = `
@@ -122,6 +123,7 @@ export function generateReadmeStringFromTemplateString(
     projectStability: options.projectStability.valueOf(),
   };
   let ossHeader = nunjucks.renderString(ossHeaderTemplate, headerContext);
+  let usageExampleCode = '';
 
   if (options.projectInfo.type === ProjectType.SDK) {
     const sdkProject = options.projectInfo as SdkProject;
@@ -137,6 +139,9 @@ export function generateReadmeStringFromTemplateString(
       stabilityNotes: stabilityNotes,
     };
     ossHeader += nunjucks.renderString(sdkHeaderTemplate, sdkHeaderContext);
+
+    const usageExamplePath = sdkProject.usageExamplePath;
+    usageExampleCode = fs.readFileSync(usageExamplePath).toString();
   }
 
   const ossFooterTemplate = OSS_FOOTER_TEMPLATE;
@@ -146,6 +151,7 @@ export function generateReadmeStringFromTemplateString(
   const templateContext: ReadmeTemplateContext = {
     ossHeader: ossHeader,
     ossFooter: ossFooter,
+    usageExampleCode: usageExampleCode,
   };
   return nunjucks.renderString(options.templateContents, templateContext);
 }
