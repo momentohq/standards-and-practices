@@ -14,6 +14,9 @@ inputs:
   sdk_language:
     required: false
     description: 'JavaScript, Python, etc.'
+  usage_example_path:
+    required: false
+    description: 'path to usage example file'
 runs:
   using: 'composite'
   steps:
@@ -23,6 +26,7 @@ runs:
         project_stability: "${{ inputs.project_stability }}"
         project_type: "${{ inputs.project_type }}"
         sdk_language: "${{ inputs.sdk_language }}"
+        usage_example_path: "${{ input.usage_example_path }}"
     - shell: bash
       run: |
         git status
