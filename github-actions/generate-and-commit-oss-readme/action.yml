@@ -26,7 +26,7 @@ runs:
         project_stability: "${{ inputs.project_stability }}"
         project_type: "${{ inputs.project_type }}"
         sdk_language: "${{ inputs.sdk_language }}"
-        usage_example_path: "${{ input.usage_example_path }}"
+        usage_example_path: "${{ inputs.usage_example_path }}"
     - shell: bash
       run: |
         git status
