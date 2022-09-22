@@ -84,7 +84,7 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
   const EXAMPLE_SDK_PROJECT_INFO: SdkProject = {
     type: ProjectType.SDK,
     language: 'WaterLoop',
-    usageExamplePath: path.join(process.cwd(), 'src', 'examples', 'usage.ts'),
+    usageExamplePath: path.join(__dirname, 'examples', 'usage.ts'),
   };
 
   it('succeeds for an SDK README that includes all of the expected section headers', () => {
