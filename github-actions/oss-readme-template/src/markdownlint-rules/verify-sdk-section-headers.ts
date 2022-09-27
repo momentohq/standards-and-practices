@@ -69,6 +69,14 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
         tag: 'h3',
         content: 'Usage',
       },
+      {
+        tag: 'h3',
+        content: 'Error Handling',
+      },
+      {
+        tag: 'h3',
+        content: 'Tuning',
+      },
     ];
 
     for (const expectedHeader of expectedRemainingHeaders) {

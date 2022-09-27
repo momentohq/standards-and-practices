@@ -20,4 +20,8 @@ Here is a quickstart you can use in your own project:
 {{ usageExampleCode }}
 ```
 
+### Error Handling
+
+### Tuning
+
 {{ ossFooter }}

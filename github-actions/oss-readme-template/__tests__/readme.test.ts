@@ -130,6 +130,10 @@ console.log('Hello world!');
 
 \`\`\`
 
+### Error Handling
+
+### Tuning
+
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
 `);
@@ -230,6 +234,10 @@ My Awesome Hello World Code
 ### Installation
 
 My Awesome Examples
+
+### Error Handling
+
+### Tuning
 
 {{ ossFooter }}
 `,
