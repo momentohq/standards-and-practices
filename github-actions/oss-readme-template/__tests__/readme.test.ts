@@ -95,8 +95,10 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
       })
-    )
-      .toEqual(`<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+    ).toEqual(`<head>
+  <meta name="Momento WaterLoop Client Library Documentation" content="WaterLoop client software development kit for Momento Serverless Cache">
+</head>
+<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
 
 [![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
 [![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-stable.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
