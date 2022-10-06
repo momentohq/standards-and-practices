@@ -40,13 +40,21 @@ interface ReadmeStringGeneratorOptions {
   projectStability: ProjectStability;
 }
 
+//TODO: we could move these templates to files if it ends up feeling easier to maintain that way.
+interface SdkPreHeaderTemplateContext {
+  sdkLanguage: string;
+}
+
+const OSS_SDK_README_PREHEADER_TEMPLATE = `<head>
+  <meta name="Momento {{ sdkLanguage }} Client Library Documentation" content="{{ sdkLanguage }} client software development kit for Momento Serverless Cache">
+</head>
+`;
+
 interface HeaderTemplateContext {
   githubOrgName: string;
   projectStatus: string;
   projectStability: string;
 }
-
-//TODO: we could move these templates to files if it ends up feeling easier to maintain that way.
 
 const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
 
@@ -127,6 +135,18 @@ export function generateReadmeStringFromTemplateString(
 
   if (options.projectInfo.type === ProjectType.SDK) {
     const sdkProject = options.projectInfo as SdkProject;
+
+    // Enrich ossHeader with head element
+    const sdkPreheaderContext: SdkPreHeaderTemplateContext = {
+      sdkLanguage: sdkProject.language,
+    };
+    const ossHeaderSdk = nunjucks.renderString(
+      OSS_SDK_README_PREHEADER_TEMPLATE,
+      sdkPreheaderContext
+    );
+    ossHeader = ossHeaderSdk + ossHeader;
+
+    // SDK header
     const sdkHeaderTemplate = OSS_SDK_HEADER_TEMPLATE;
 
     const stabilityNotes = getSdkStabilityNotes(
