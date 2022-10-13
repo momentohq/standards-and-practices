@@ -117,9 +117,19 @@ any of the operational overhead required by traditional caching solutions!
 
 My Awesome Requirements
 
+### Examples
+
+My awesome examples!
+
 ### Installation
 
-My Awesome Examples
+Run these awesome commands:
+
+\`\`\`bash
+foo
+bar
+baz
+\`\`\`
 
 ### Usage
 
@@ -213,8 +223,86 @@ This is an official Momento SDK, but the API is in a beta stage.  For more info,
         projectStability: ProjectStability.STABLE,
       })
     ).toThrowError(
-      /Expected to find next header with content 'Requirements', found 'FOO'/
+      /After header 'Getting Started :running:', missing expected header: 'Requirements'/
     );
+  });
+
+  it('succeeds for an SDK README that includes all of the expected section headers, but also includes additional headers', () => {
+    const templateContents = fs
+      .readFileSync(
+        path.join(
+          __dirname,
+          'workflows',
+          'valid-sdk-template-with-extra-headers.md'
+        )
+      )
+      .toString();
+
+    expect(
+      generateReadmeStringFromTemplateString({
+        templateContents: templateContents,
+        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+        projectStatus: ProjectStatus.OFFICIAL,
+        projectStability: ProjectStability.STABLE,
+      })
+    ).toEqual(`<head>
+  <meta name="Momento WaterLoop Client Library Documentation" content="WaterLoop client software development kit for Momento Serverless Cache">
+</head>
+<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+
+[![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
+[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-stable.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+
+# Momento WaterLoop Client Library
+
+
+WaterLoop client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
+any of the operational overhead required by traditional caching solutions!
+
+
+
+## Getting Started :running:
+
+### Requirements
+
+My Awesome Requirements
+
+### Examples
+
+My awesome examples!
+
+### Momento Response Types
+
+This is an extra section that is not present in all SDKs!
+
+### Installation
+
+Run these awesome commands:
+
+\`\`\`bash
+foo
+bar
+baz
+\`\`\`
+
+### Usage
+
+Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
+
+Here is a quickstart you can use in your own project:
+
+\`\`\`typescript
+console.log('Hello world!');
+
+\`\`\`
+
+### Error Handling
+
+### Tuning
+
+----------------------------------------------------------------------------------------
+For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
+`);
   });
 
   it('fails for an SDK README that has expected section headers in the wrong order', () => {
@@ -228,6 +316,10 @@ This is an official Momento SDK, but the API is in a beta stage.  For more info,
 ### Requirements
 
 My Awesome Requirements
+
+### Examples
+
+Examples
 
 ### Usage
 
@@ -248,7 +340,7 @@ My Awesome Examples
         projectStability: ProjectStability.STABLE,
       })
     ).toThrowError(
-      /Expected to find next header with content 'Installation', found 'Usage'/
+      /After header 'Installation', missing expected header: 'Usage'/
     );
   });
 });

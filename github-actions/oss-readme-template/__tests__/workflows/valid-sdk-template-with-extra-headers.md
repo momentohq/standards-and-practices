@@ -10,6 +10,10 @@ My Awesome Requirements
 
 My awesome examples!
 
+### Momento Response Types
+
+This is an extra section that is not present in all SDKs!
+
 ### Installation
 
 Run these awesome commands:
