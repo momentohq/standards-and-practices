@@ -63,6 +63,10 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
       },
       {
         tag: 'h3',
+        content: 'Examples',
+      },
+      {
+        tag: 'h3',
         content: 'Installation',
       },
       {
@@ -79,39 +83,43 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
       },
     ];
 
+    let lastSuccessfulMatch = '';
     for (const expectedHeader of expectedRemainingHeaders) {
-      const nextActualHeader: HeaderWithLineNumber =
+      let nextActualHeader: HeaderWithLineNumber =
         headers.shift() as HeaderWithLineNumber;
       console.info(`Checking for expected header: '${expectedHeader.content}'`);
       console.info(`Next actual header: '${JSON.stringify(nextActualHeader)}'`);
+      while (nextActualHeader !== undefined) {
+        if (expectedHeader.content !== nextActualHeader.content) {
+          console.info(
+            `Found extra, non-required header: '${nextActualHeader.content}'.  Ignoring.`
+          );
+          nextActualHeader = headers.shift() as HeaderWithLineNumber;
+          continue;
+        }
+
+        if (expectedHeader.tag !== nextActualHeader.tag) {
+          onError({
+            lineNumber: nextActualHeader.lineNumber,
+            detail: `Expected to find next header with tag '${expectedHeader.tag}', found '${nextActualHeader.tag}'`,
+          });
+        }
+
+        // this is the success case, the header matched.
+        lastSuccessfulMatch = nextActualHeader.content;
+        break;
+      }
+
       if (nextActualHeader === undefined) {
+        const message =
+          lastSuccessfulMatch === ''
+            ? 'Missing expected header'
+            : `After header '${lastSuccessfulMatch}', missing expected header`;
         onError({
           lineNumber: headerOpenLineNumber,
-          detail: `Missing expected header: '${expectedHeader.content}'`,
-        });
-        continue;
-      }
-
-      if (expectedHeader.tag !== nextActualHeader.tag) {
-        onError({
-          lineNumber: nextActualHeader.lineNumber,
-          detail: `Expected to find next header with tag '${expectedHeader.tag}', found '${nextActualHeader.tag}'`,
+          detail: `${message}: '${expectedHeader.content}'`,
         });
       }
-
-      if (expectedHeader.content !== nextActualHeader.content) {
-        onError({
-          lineNumber: nextActualHeader.lineNumber,
-          detail: `Expected to find next header with content '${expectedHeader.content}', found '${nextActualHeader.content}'`,
-        });
-      }
-    }
-
-    if (headers.length !== 0) {
-      onError({
-        lineNumber: headers[0].lineNumber,
-        detail: `Found extra header: '${headers[0].content}'`,
-      });
     }
 
     return;
