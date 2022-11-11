@@ -8,6 +8,9 @@ calls to users.
 All code in this example repo is TypeScript pseudocode.  Implementations should use the appropriate idioms for the
 programming language at hand.
 
+**Note: as of Nov 11, 2022, the [.NET SDK](https://github.com/momentohq/client-sdk-dotnet) is the one that has had
+the most work done to bring it into compliance with our specs, so it should be treated as the reference implementation.**
+
 # Tenets
 
 The overarching goals of the specification are:
@@ -50,6 +53,9 @@ class MomentoError extends Error {
 }
 ```
 
+**The appropriate `toString()` method in the language should be overridden so that if a user prints the exception, they
+are assured to see something meaningful.**
+
 Implementations may provide subtypes that map to individual error codes if idiomatic to the language.
 
 The `MomentoErrorCode` is an enum that be used to easily and concretely check error types in code.  Its values should
@@ -89,13 +95,84 @@ interface MomentoGrpcErrorDetails {
 
 # Exposing Errors In Return Values
 
-**In languages that support sealed / algebraic data types, these should always be preferred.  In this document we are
-using TypeScript for our examples, so this illustrates more of a worst-case scenario for languages that lack such features.**
-
 `SimpleCacheClient` functions should return custom data types that are defined in the SDKs - they should not directly
 return generated gRPC response objects.
 
-## `CreateCache` and similar operations
+Some languages (C#, Kotlin, Rust) support sealed algebraic data types and pattern matching.  When available, these should be preferred.
+
+## Languages that support pattern matching
+
+Examples in this section are based on C#.  Kotlin, Rust, and possibly other languages will have better support for
+pattern matching.
+
+### `CreateCache` and similar operations
+
+The `CreateCache` return value should be of type `CreateCacheResponse`, and should have three sub-types: `Success`,
+`AlreadyExists`, and `Error`.  Pattern matching is used to access the sub-types and their corresponding properties.
+
+```csharp
+var createCacheResponse = await client.CreateCacheAsync("myCache");
+if (createCacheResponse is CreateCacheResponse.Success createCacheSuccess)
+{
+  Console.WriteLine("Cache created");
+}
+else if (createCacheResponse is CreateCacheResponse.AlreadyExists createCacheAlreadyExists)
+{
+  Console.WriteLine("Already exists");
+}
+else if (createCacheResponse is CreateCacheResponse.Error createCacheError) {
+  Console.WriteLine($"Error {createCacheError.ErrorCode} creating cache: {createCacheError}");  
+} else {
+  Console.WriteLine($"Something unexpected happened while attempting to create cache: ${createCacheResponse}");
+}
+```
+
+### `Get` and similar operations
+
+The `Get` return value should be of type `CacheGetResponse`, and should have three sub-types: `Hit`,
+`Miss`, and `Error`.  Pattern matching is used to access the sub-types and their corresponding properties.
+
+```csharp
+var getResponse = await client.GetAsync("myCache", "myKey");
+if (getResponse is CacheGetResponse.Hit hitResponse)
+{
+  Console.WriteLine("Cache hit; value: ${getResponse.ValueString}");
+}
+else if (getResponse is CacheGetResponse.Miss missResponse)
+{
+  Console.WriteLine("Cache miss!");
+}
+else if (getResponse is CacheGetResponse.Error errorResponse)) {
+  Console.WriteLine($"Error {errorResponse.ErrorCode}: {errorResponse}");
+} else {
+  Console.WriteLine($"`Something unexpected occurred while attempting to get key 'myKey' from cache 'myCache': {getResponse}");
+}
+```
+
+### `Set` and similar operations
+
+The `Set` return value should be of type `CacheSetResponse`, and should have two sub-types: `Success`,
+and `Error`.  Pattern matching is used to access the sub-types and their corresponding properties.
+
+```csharp
+var setResponse = await client.SetAsync("myCache", "myKey", "myValue");
+if (setResponse is CacheSetResponse.Hit successResponse)
+{
+  Console.WriteLine("Cache set successful");
+}
+else if (setResponse is CacheSetResponse.Error errorResponse)) {
+  Console.WriteLine($"Error {errorResponse.ErrorCode}: {errorResponse}");
+} else {
+  Console.WriteLine($"`Something unexpected occurred while attempting to set key 'myKey' in cache 'myCache': {setResponse}");
+}
+```
+
+## Languages that do not support pattern matching
+
+In languages that don't support pattern matching (PHP, TypeScript, etc.) we will use a status enum or `as` methods
+to cast to the appropriate response type.
+
+### `CreateCache` and similar operations
 
 The `CreateCache` return value should have a `status` field, whose value is an enumeration including `SUCCESS` and `ERROR`.
 If the status is `ERROR`, then a `.error` field of type `Error` should be available:
@@ -112,7 +189,7 @@ if (result.status === CreateCacheStatus.SUCCESS) {
 }
 ```
 
-## `Get` and similar operations
+### `Get` and similar operations
 
 The `Get` return value should have a `status` field, whose value is an enumeration including `HIT`, `MISS` and `ERROR`.
 If the status is `ERROR`, then a `.error` field of type `Error` MUST be available:
@@ -131,7 +208,7 @@ if (result.status === CacheGetStatus.HIT) {
 }
 ```
 
-## `Set` and similar operations
+### `Set` and similar operations
 
 The `Set` return value should have a `status` field, whose value is an enumeration including `SUCCESS` and `ERROR`.
 If the status is `ERROR`, then a `.error` field of type `Error` should be available:
