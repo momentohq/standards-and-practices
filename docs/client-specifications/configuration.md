@@ -19,6 +19,12 @@ we have established high-confidence default settings that cover the 90% use case
 * Configurations must be specified as interfaces, so that alternate implementations can be added over time.
 * Users should always have a last-resort option of manually tuning the settings themselves, in case there are special
   cases that our defaults are not quite right for.
+* We should prefer language specific types that represent time offsets (e.g. C# `TimeSpan`) when possible, rather than
+  using integer variables like `timeoutSeconds`;
+* If the language provides a standard / idiomatic logging facade, we should strive to adhere to it as much as humanly
+  possible.  In some languages (Java, Kotlin) this will be a global/singleton setup, so we won't need to expose it in
+  our configuration API.  In other languages (C#, PHP), we will need to allow users to inject their logging machinery
+  into the constructors for our pre-built configs.
 
 # Choosing a configuration
 
@@ -32,7 +38,7 @@ const client = SimpleCacheClient({config: config.Laptop.latest()});
 
 # Pre-built Configuration Objects
 
-## Requirements for each pre-built configuration objects
+## Requirements for each pre-built configuration object
 
 Each SDK must provide a namespace (via the idiomatic construct in the relevant programming language) that contains
 an enumerated list of pre-built configuration objects.
@@ -76,13 +82,22 @@ const prodLowLatencyConfig = config.InRegion.LowLatency.latest();
 
 ## Configuration interface
 
-The configuration interface provides nested objects for retry strategy, middleware, and transport:
+The configuration interface provides nested objects for retry strategy, middleware, and transport.  It should also
+provide copy constructors for overriding any of those, and a `WithClientTimeout` function to simplify the modification
+of that setting.
 
 ```typescript
 interface Configuration {
-  retryStrategy: RetryStrategy,
-  middlewares: Array<Middleware>,
-  transportStrategy: TransportStrategy
+  loggerFactory: LoggerFactory; // the existence of this field will vary by language; some languages will provide a singleton/global facade so we won't need this.
+  retryStrategy: RetryStrategy;
+  middlewares: Array<Middleware>;
+  transportStrategy: TransportStrategy;
+  
+  withRetryStrategy(retryStrategy: RetryStrategy): Configuration;
+  withMiddlewares(middlewares: Array<Middleware>): Configuration;
+  withAdditionalMiddlewares(additionalMiddlewares: Array<Middleware>): Configuration;
+  withTransportStrategy(transportStrategy: TransportStrategy): Configuration;
+  withClientTimeout(clientTimeout: TimeSpan): Configuration;
 }
 ```
 
@@ -97,7 +112,7 @@ interface RetryStrategy {
    * Returns the number of milliseconds after which the request should be retried, or `undefined` if the request should
    * not be retried.  `0` means retry immediately.
    */
-  determineWhenToRetryRequest(grpcResult: GrpcResult, grpcRequest: GrpcRequest, attemptNumber: number): Promise<number | undefined>;
+  determineWhenToRetryRequest<TRequest>(grpcStatus: Status, grpcRequest: TRequest, attemptNumber: number): Promise<number | undefined>;
 }
 ```
 
@@ -112,9 +127,26 @@ allows future support for things like client-side metrics or other diagnostics h
 
 ```typescript
 interface Middleware {
-  wrapRequest(middlewareFn: (GrpcRequest) => GrpcResult): GrpcResult;
+  wrapRequest<TRequest, TResponse>(
+    request: TRequest,
+    callOptions: CallOptions,
+    continuation: (request: TRequest, callOptions: CallOptions, middlewareState: MiddlewareResponseState) => TResponse
+  ): Promise<MiddlewareResponseState>;
 }
 ```
+
+The details of the above will vary slightly based on the gRPC semantics in the respective language.  e.g. MiddlewareResponseState
+may look something like this:
+
+```typescript
+interface MiddlewareResponseState<TResponse> {
+  response: Promise<TResponse>;
+  headers: Promise<Metadata>;
+  status: Promise<Status>;
+  trailers: Promise<Metadata>;
+}
+```
+
 
 ### TransportStrategy
 
@@ -127,7 +159,14 @@ interface TransportStrategy {
   maxConcurrentRequests: number;
   grpcConfig: GrpcConfiguration;
 }
+```
 
+The gRPC config will vary drastically from one language to the next.  In some languages they will provide
+a pre-defined object that we will just use (C#).  In others it will be a more raw mechanism that allows
+us to configure arbitrary key/value pairs for configuring the underlying gRPC channels; in these cases
+we will make a thin interface to ensure the most important values are visible.
+
+```typescript
 interface GrpcConfiguration {
   numChannels(): number;
 
