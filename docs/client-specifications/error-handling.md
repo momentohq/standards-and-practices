@@ -66,10 +66,10 @@ enum MomentoErrorCode {
   INVALID_ARGUMENT_ERROR = 'INVALID_ARGUMENT_ERROR',       // message: `Invalid argument passed to Momento client: ${detail}`
   UNKNOWN_SERVICE_ERROR = 'UNKNOWN_SERVICE_ERROR',         // message: `The service returned an unknown response; please contact Momento: ${detail}`
   ALREADY_EXISTS_ERROR = 'ALREADY_EXISTS_ERROR',           // message: `A cache with the specified name already exists.  To resolve this error, either delete the existing cache and make a new one, or use a different name.  Cache name: '${cacheName}'`
-  NOT_FOUND_ERROR = 'NOT_FOUND_ERROR',                     // message: `A cache with the specified name does not exist.  To resolve this error, make sure you have created the cache before attempting to use it.  Cache name; '${cacheName}'`
+  NOT_FOUND_ERROR = 'NOT_FOUND_ERROR',                     // message: `A cache with the specified name does not exist.  To resolve this error, make sure you have created the cache before attempting to use it.  Cache name: '${cacheName}'`
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',         // message: `An unexpected error occurred while trying to fulfill the request; please contact Momento: ${detail}`
   PERMISSION_ERROR = 'PERMISSION_ERROR',                   // message: `Insufficient permissions to perform an operation on a cache: ${detail}`
-  AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR',          // message: `Invalid authentication credentials to connect to cache service: ${detail}`
+  AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR',           // message: `Invalid authentication credentials to connect to cache service: ${detail}`
   CANCELLED_ERROR = 'CANCELLED_ERROR',                     // message: `The request was cancelled by the server; please contact Momento: ${detail}`
   LIMIT_EXCEEDED_ERROR = 'LIMIT_EXCEEDED_ERROR',           // message: `Request rate exceeded the limits for this account.  To resolve this error, reduce your request rate, or contact Momento to request a limit increase.`
   BAD_REQUEST_ERROR = 'BAD_REQUEST_ERROR',                 // message: `The request was invalid; please contact Momento: ${detail}`
