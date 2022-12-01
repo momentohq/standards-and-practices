@@ -99,7 +99,7 @@ exports.mustIncludeOssHeaders = {
     names: ['must-include-oss-headers'],
     description: 'Template must begin with OSS Header and end with OSS Footer',
     tags: ['momento-oss'],
-    information: new URL('https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator'),
+    information: new URL('https://github.com/momentohq/standards-and-practices/tree/main/github-actions/oss-readme-template'),
     function: (params, onError) => {
         const firstThreeTokens = params.tokens.slice(0, 3);
         verifyTokens(firstThreeTokens, ossHeaderTag, onError, 'Expected template file to begin with', firstThreeTokens[0].lineNumber);
@@ -149,7 +149,7 @@ exports.verifySdkSectionHeaders = {
     names: ['expected-sdk-section-headers'],
     description: 'SDK must have required section headers',
     tags: ['momento-oss'],
-    information: new URL('https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator'),
+    information: new URL('https://github.com/momentohq/standards-and-practices/tree/main/github-actions/oss-readme-template'),
     function: (params, onError) => {
         const headers = [];
         let insideHeaderOpenTag = false;

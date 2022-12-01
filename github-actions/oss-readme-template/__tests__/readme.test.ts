@@ -73,8 +73,8 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
       });
     })
       .toThrowError(`README template does not conform to Momento OSS requirements:
-{"lineNumber":2,"ruleNames":["must-include-oss-headers"],"ruleDescription":"Template must begin with OSS Header and end with OSS Footer","ruleInformation":"https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator","errorDetail":"Expected template file to begin with {{ ossHeader }}, on a line by itself.","errorContext":null,"errorRange":null,"fixInfo":null}
-{"lineNumber":2,"ruleNames":["must-include-oss-headers"],"ruleDescription":"Template must begin with OSS Header and end with OSS Footer","ruleInformation":"https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator","errorDetail":"Expected template file to end with {{ ossFooter }}, on a line by itself.","errorContext":null,"errorRange":null,"fixInfo":null}`);
+{"lineNumber":2,"ruleNames":["must-include-oss-headers"],"ruleDescription":"Template must begin with OSS Header and end with OSS Footer","ruleInformation":"https://github.com/momentohq/standards-and-practices/tree/main/github-actions/oss-readme-template","errorDetail":"Expected template file to begin with {{ ossHeader }}, on a line by itself.","errorContext":null,"errorRange":null,"fixInfo":null}
+{"lineNumber":2,"ruleNames":["must-include-oss-headers"],"ruleDescription":"Template must begin with OSS Header and end with OSS Footer","ruleInformation":"https://github.com/momentohq/standards-and-practices/tree/main/github-actions/oss-readme-template","errorDetail":"Expected template file to end with {{ ossFooter }}, on a line by itself.","errorContext":null,"errorRange":null,"fixInfo":null}`);
   });
 
   const VALID_TEMPLATE_CONTENTS = fs
