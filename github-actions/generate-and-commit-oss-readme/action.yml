@@ -45,7 +45,3 @@ runs:
         # Optional commit user and author settings
         commit_user_name: Momento GitHub Actions Bot
         commit_user_email: github-actions-bot@momenthohq.com
-
-        # Optional. Option used by `git-status` to determine if the repository is
-        # dirty. See https://git-scm.com/docs/git-status#_options
-        status_options: '--untracked-files=no'
