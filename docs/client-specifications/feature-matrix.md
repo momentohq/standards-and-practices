@@ -5,12 +5,19 @@
 This page should serve as a checklist for developers who are preparing the client library
 for a given language for a 1.0 release.
 
+This page is not intended to provide in-depth detail about each of these feature sets.  For
+more information on the scope of the various features see the specifications documents:
+
+* [Configuration Specification](./configuration.md) - covers Configuration interface, pre-built Configuration objects, Retry strategies, Logging, Middleware, etc.
+* [Error Handling Specification](./error-handling.md) - covers what API response objects should look like, how errors are surfaced to users, etc. 
+
 ## Features / Requirements
 
 * `Release`: Repo has been set up according to our [SDK release process](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-sdk-release-process.md) and binary artifacts are published to the appropriate
              package repository for the language.
-* `Get/Set APIs`: Support for basic get/set APIs, with Strings or byte arrays.
+* `Get/Set APIs`: Support for basic cache CRUD operations and get/set APIs, with Strings or byte arrays.
 * `Examples`: Repo includes example code that is tested in CI
+* `Integration Tests`: Repo includes tests that cover all supported APIs, executed against a live Momento server (or momento-local when it becomes available)
 * `Error Handling`: SDK has been updated to be consistent with [Momento error handling specifications](https://github.com/momentohq/standards-and-practices/blob/main/docs/client-specifications/error-handling.md).
 * `Config`: Provides Configuration interface that can be used to adjust relevant settings as per [Momento configuration specification](https://github.com/momentohq/standards-and-practices/blob/main/docs/client-specifications/configuration.md).
 * `Retries`: Basic retry support for failed requests, and the ability for a user to configure a custom retry strategy.
@@ -37,6 +44,7 @@ for a given language for a 1.0 release.
 | Release           | :white_check_mark: | :x:                | :white_check_mark: | :white_check_mark: | :x:                | :white_check_mark: | :x:                | :x:                |
 | Get/Set           | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Examples          | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Integration Tests | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Error Handling    | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :white_check_mark: | :x:                | :x:                |
 | Config            | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Retries           | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
@@ -48,4 +56,4 @@ for a given language for a 1.0 release.
 | Data Structures   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
 
 ----------------------------------------------------------------------------------------
-For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
+For more info, visit our website at [https://gomomento.com](https://gomomento.com), or developer docs at [https://docs.momentohq.com](https://docs.momentohq.com).
