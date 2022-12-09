@@ -53,7 +53,7 @@ more information on the scope of the various features see the specifications doc
 | Logging           | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
 | Debug Logging     | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Lambda            | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
-| Data Structures   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
+| Data Structures   | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com), or developer docs at [https://docs.momentohq.com](https://docs.momentohq.com).
