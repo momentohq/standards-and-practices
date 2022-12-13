@@ -223,4 +223,20 @@ if (result.status === CacheSetStatus.SUCCESS) {
 }
 ```
 
+# Exceptions
 
+There are a few cases when it is appropriate to raise an exception.
+
+In general, errors inside the client or with service or about details of using Momento must be error responses. Mistakes on the part of the programmer may be exceptions. Looking at it another way, we want to avoid crashing the whole app because of a Momento error, we only want to raise exceptions for things which should be caught during development.
+
+For example, using a cache name which does not match our rules is an INVALID_ARGUMENT_ERROR response, because it is an input error which could happen during normal operations, and the rules are not immediately obvious. Using a nil cache name is an exception, because it indicates an error in the user's code.
+
+In general, SDK exceptions fall into two categories.
+
+* TypeErrors (for languages which do not do compile time type checks)
+  * Example, when the cache name is not a string.
+* ArgumentErrors
+  * Example, a TTL of -1
+  * Example, an unparsable authentication token
+
+All runtime exceptions should be clearly documented on the methods which may raise them.
