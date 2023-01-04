@@ -71,7 +71,7 @@ enum MomentoErrorCode {
   PERMISSION_ERROR = 'PERMISSION_ERROR',                   // message: `Insufficient permissions to perform an operation on a cache: ${detail}`
   AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR',           // message: `Invalid authentication credentials to connect to cache service: ${detail}`
   CANCELLED_ERROR = 'CANCELLED_ERROR',                     // message: `The request was cancelled by the server; please contact Momento: ${detail}`
-  LIMIT_EXCEEDED_ERROR = 'LIMIT_EXCEEDED_ERROR',           // message: `Request rate exceeded the limits for this account.  To resolve this error, reduce your request rate, or contact Momento to request a limit increase.`
+  LIMIT_EXCEEDED_ERROR = 'LIMIT_EXCEEDED_ERROR',           // message: `Request rate, bandwidth, or object size exceeded the limits for this account.  To resolve this error, reduce your usage as appropriate or contact Momento to request a limit increase.`
   BAD_REQUEST_ERROR = 'BAD_REQUEST_ERROR',                 // message: `The request was invalid; please contact Momento: ${detail}`
   TIMEOUT_ERROR = 'TIMEOUT_ERROR',                         // message: `The client's configured timeout was exceeded; you may need to use a Configuration with more lenient timeouts.  Timeout value: ${timeout}`
   SERVER_UNAVAILABLE = 'SERVER_UNAVAILABLE',               // message: `The server was unable to handle the request; consider retrying.  If the error persists, please contact Momento.`
