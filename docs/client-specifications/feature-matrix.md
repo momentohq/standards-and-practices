@@ -21,6 +21,7 @@ more information on the scope of the various features see the specifications doc
 * `Error Handling`: SDK has been updated to be consistent with [Momento error handling specifications](https://github.com/momentohq/standards-and-practices/blob/main/docs/client-specifications/error-handling.md).
 * `Config`: Provides Configuration interface that can be used to adjust relevant settings as per [Momento configuration specification](https://github.com/momentohq/standards-and-practices/blob/main/docs/client-specifications/configuration.md).
 * `Retries`: Basic retry support for failed requests, and the ability for a user to configure a custom retry strategy.
+* `Middleware`: Supports configurable middleware, that can be used for things like adding per-request logging, client-side metrics, etc.
 * `LoadGen`: Includes some very minimal scripts that can be used to generate load through the SDK; these are intended for
              use in tuning for pre-built configurations, and also to serve as a starting point for users who might want to
             modify them to simulate their own load.
@@ -48,6 +49,7 @@ more information on the scope of the various features see the specifications doc
 | Error Handling    | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :white_check_mark: | :x:                | :x:                |
 | Config            | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Retries           | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
+| Middleware        | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | LoadGen           | :white_check_mark: | :x:                | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
 | Pre-built Configs | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Logging           | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
