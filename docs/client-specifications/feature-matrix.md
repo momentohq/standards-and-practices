@@ -36,7 +36,7 @@ more information on the scope of the various features see the specifications doc
     timeout to establish their initial connection due to cold start considerations.
   * Also requires testing to ensure that if the client is stored in a global variable, and is re-used after more than 350s
     of idle time (the idle connection timeout for AWS NLB), the client will be able to gracefully re-establish the gRPC connection.
-* `Data Structures`: supports APIs for Lists, Sets, and Dictionaries
+* `Collections`: supports APIs for Lists, Sets, and Dictionaries
 
 ## Current Status
 
@@ -46,16 +46,16 @@ more information on the scope of the various features see the specifications doc
 | Get/Set           | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Examples          | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Integration Tests | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Error Handling    | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :white_check_mark: | :x:                | :x:                |
-| Config            | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
+| Error Handling    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :white_check_mark: | :x:                | :x:                |
+| Config            | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Retries           | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Middleware        | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | LoadGen           | :white_check_mark: | :x:                | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
-| Pre-built Configs | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
+| Pre-built Configs | :white_check_mark: | :x:                | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Logging           | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                |
 | Debug Logging     | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 | Lambda            | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
-| Data Structures   | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
+| Collections       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                |
 
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com), or developer docs at [https://docs.momentohq.com](https://docs.momentohq.com).
