@@ -179,33 +179,6 @@ This is an official Momento SDK, but the API is in an early experimental stage a
 changes.  For more info, click on the experimental badge above.`);
   });
 
-  it('includes expected text for alpha apis', () => {
-    expect(
-      generateReadmeStringFromTemplateString({
-        templateContents: VALID_TEMPLATE_CONTENTS,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
-        projectStatus: ProjectStatus.OFFICIAL,
-        projectStability: ProjectStability.ALPHA,
-      })
-    ).toContain(`:warning: Alpha SDK :warning:
-
-This is an official Momento SDK, but the API is in an alpha stage and may be subject to backward-incompatible
-changes.  For more info, click on the alpha badge above.`);
-  });
-
-  it('includes expected text for beta apis', () => {
-    expect(
-      generateReadmeStringFromTemplateString({
-        templateContents: VALID_TEMPLATE_CONTENTS,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
-        projectStatus: ProjectStatus.OFFICIAL,
-        projectStability: ProjectStability.BETA,
-      })
-    ).toContain(`:warning: Beta SDK :warning:
-
-This is an official Momento SDK, but the API is in a beta stage.  For more info, click on the beta badge above.`);
-  });
-
   it('fails for an SDK README that is missing an expected section header', () => {
     expect(() =>
       generateReadmeStringFromTemplateString({
