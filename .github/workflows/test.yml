@@ -15,7 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - working-directory: ./github-actions/${{ matrix.github-action }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+     - working-directory: ./github-actions/${{ matrix.github-action }}
         run: |
           npm install
       - working-directory: ./github-actions/${{ matrix.github-action }}
