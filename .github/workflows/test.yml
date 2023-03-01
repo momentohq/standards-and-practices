@@ -14,6 +14,10 @@ jobs:
         github-action: [ oss-readme-template ]
 
     steps:
+      - name: diagnostic
+        run: |
+          npm --version
+          node --version
       - uses: actions/checkout@v2
       - working-directory: ./github-actions/${{ matrix.github-action }}
         run: |
