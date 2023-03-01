@@ -14,12 +14,15 @@ jobs:
         github-action: [ oss-readme-template ]
 
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: diagnostic
         run: |
           npm --version
           node --version
-      - uses: actions/checkout@v2
-      - working-directory: ./github-actions/${{ matrix.github-action }}
+     - working-directory: ./github-actions/${{ matrix.github-action }}
         run: |
           npm install
       - working-directory: ./github-actions/${{ matrix.github-action }}
