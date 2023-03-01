@@ -137,14 +137,18 @@ export function generateReadmeStringFromTemplateString(
     const sdkProject = options.projectInfo as SdkProject;
 
     // Enrich ossHeader with head element
-    const sdkPreheaderContext: SdkPreHeaderTemplateContext = {
-      sdkLanguage: sdkProject.language,
-    };
-    const ossHeaderSdk = nunjucks.renderString(
-      OSS_SDK_README_PREHEADER_TEMPLATE,
-      sdkPreheaderContext
-    );
-    ossHeader = ossHeaderSdk + ossHeader;
+    // We exclude python since PyPI does not render the head
+    // element properly inside a markdown file.
+    if (sdkProject.language.toLowerCase() !== 'python') {
+      const sdkPreheaderContext: SdkPreHeaderTemplateContext = {
+        sdkLanguage: sdkProject.language,
+      };
+      const ossHeaderSdk = nunjucks.renderString(
+        OSS_SDK_README_PREHEADER_TEMPLATE,
+        sdkPreheaderContext
+      );
+      ossHeader = ossHeaderSdk + ossHeader;
+    }
 
     // SDK header
     const sdkHeaderTemplate = OSS_SDK_HEADER_TEMPLATE;
