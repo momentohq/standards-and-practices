@@ -8,6 +8,15 @@ inputs:
   sdk_language:
     required: false
     description: 'JavaScript, Python, etc.'
+  dev_docs_slug:
+    required: false
+    description: 'The slug in the dev docs SDKs section that we should link to, e.g. "nodejs" or "python"'
+  multiple_sdks:
+    required: false
+    description: 'Set to true if this SDK README describes more than one SDK'
+  omit_html_head:
+    required: false
+    description: 'If true, omit the SEO html head element to avoid rendering issues in package repos such as pypi'
   project_status:
     required: true
     description: 'official or incubating'
@@ -17,14 +26,11 @@ inputs:
   template_file:
     required: false
     description: 'path to readme template file'
-    default: 'README.template.md'
+    default: 'non-sdk.template.md'
   output_file:
     required: false
     description: 'output file path to write generated README'
     default: 'README.md'
-  usage_example_path:
-    required: false
-    description: 'path to usage example file'
 runs:
   using: 'node16'
   main: 'dist/index.js'

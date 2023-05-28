@@ -11,6 +11,7 @@ import {
 } from './inputs';
 import {mustIncludeOssHeaders} from './markdownlint-rules/must-include-oss-headers';
 import {verifySdkSectionHeaders} from './markdownlint-rules/verify-sdk-section-headers';
+import {verifySdkHasExampleInclude} from './markdownlint-rules/verify-sdk-has-example-include';
 
 export interface ReadmeFileGeneratorOptions {
   templateFile: string;
@@ -46,7 +47,7 @@ interface SdkPreHeaderTemplateContext {
 }
 
 const OSS_SDK_README_PREHEADER_TEMPLATE = `<head>
-  <meta name="Momento {{ sdkLanguage }} Client Library Documentation" content="{{ sdkLanguage }} client software development kit for Momento Serverless Cache">
+  <meta name="Momento {{ sdkLanguage }} Client Library Documentation" content="{{ sdkLanguage }} client software development kit for Momento Cache">
 </head>
 `;
 
@@ -59,27 +60,32 @@ interface HeaderTemplateContext {
 const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
 
 [![project status](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-status-{{ projectStatus }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-stability-{{ projectStability }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md) 
+[![project stability](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-stability-{{ projectStability }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md)
 `;
 
 interface ReadmeTemplateContext {
   ossHeader: string;
   ossFooter: string;
-  usageExampleCode: string;
 }
 
 const OSS_SDK_HEADER_TEMPLATE = `
-# Momento {{ sdkLanguage }} Client Library
-
+# Momento {{ sdkLanguage }} Client Librar{{ singularPluralLibrarySuffix }}
 {{ stabilityNotes }}
-{{ sdkLanguage }} client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
-any of the operational overhead required by traditional caching solutions!
+Momento Cache is a fast, simple, pay-as-you-go caching solution without any of the operational overhead
+required by traditional caching solutions.  This repo contains the source code for the Momento {{ sdkLanguage }} client librar{{ singularPluralLibrarySuffix }}.
 
-`;
+* Website: [https://www.gomomento.com/](https://www.gomomento.com/)
+* Momento Documentation: [https://docs.momentohq.com/](https://docs.momentohq.com/)
+* Getting Started: [https://docs.momentohq.com/getting-started](https://docs.momentohq.com/getting-started)
+* {{ sdkLanguage }} SDK Documentation: [https://docs.momentohq.com/develop/sdks/waterloop](https://docs.momentohq.com/develop/sdks/{{ sdkDevDocsSlug }})
+* Discuss: [Momento Discord](https://discord.gg/3HkAKjUZGq)
+`.trimEnd();
 
 interface SdkHeaderTemplateContext {
   sdkLanguage: string;
+  sdkDevDocsSlug: string;
   stabilityNotes: string;
+  singularPluralLibrarySuffix: string;
 }
 
 const OSS_FOOTER_TEMPLATE = `
@@ -132,15 +138,14 @@ export function generateReadmeStringFromTemplateString(
     projectStability: options.projectStability.valueOf(),
   };
   let ossHeader = nunjucks.renderString(ossHeaderTemplate, headerContext);
-  let usageExampleCode = '';
 
   if (options.projectInfo.type === ProjectType.SDK) {
     const sdkProject = options.projectInfo as SdkProject;
 
-    // Enrich ossHeader with head element
-    // We exclude python since PyPI does not render the head
-    // element properly inside a markdown file.
-    if (sdkProject.language.toLowerCase() !== 'python') {
+    // Enrich ossHeader with head element for SEO. We exclude this from some
+    // SDKs because it doesn't render properly on their package manager splash
+    // pages.
+    if (!sdkProject.omitHtmlHeadElement) {
       const sdkPreheaderContext: SdkPreHeaderTemplateContext = {
         sdkLanguage: sdkProject.language,
       };
@@ -161,12 +166,11 @@ export function generateReadmeStringFromTemplateString(
 
     const sdkHeaderContext: SdkHeaderTemplateContext = {
       sdkLanguage: sdkProject.language,
+      sdkDevDocsSlug: sdkProject.devDocsSlug,
       stabilityNotes: stabilityNotes,
+      singularPluralLibrarySuffix: sdkProject.multipleSdksInRepo ? 'ies' : 'y',
     };
     ossHeader += nunjucks.renderString(sdkHeaderTemplate, sdkHeaderContext);
-
-    const usageExamplePath = sdkProject.usageExamplePath;
-    usageExampleCode = fs.readFileSync(usageExamplePath).toString();
   }
 
   const ossFooterTemplate = OSS_FOOTER_TEMPLATE;
@@ -176,7 +180,6 @@ export function generateReadmeStringFromTemplateString(
   const templateContext: ReadmeTemplateContext = {
     ossHeader: ossHeader,
     ossFooter: ossFooter,
-    usageExampleCode: usageExampleCode,
   };
   return nunjucks.renderString(options.templateContents, templateContext);
 }
@@ -185,7 +188,7 @@ function additionalRulesForProjectType(
   projectType: ProjectType
 ): Array<markdownlint.Rule> {
   if (projectType === ProjectType.SDK) {
-    return [verifySdkSectionHeaders];
+    return [verifySdkSectionHeaders, verifySdkHasExampleInclude];
   } else if (projectType === ProjectType.OTHER) {
     return [];
   } else {

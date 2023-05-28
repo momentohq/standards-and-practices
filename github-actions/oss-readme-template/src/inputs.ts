@@ -12,7 +12,9 @@ export interface ProjectInfo {
 export interface SdkProject extends ProjectInfo {
   type: ProjectType.SDK;
   language: string;
-  usageExamplePath: string;
+  devDocsSlug: string;
+  multipleSdksInRepo: boolean;
+  omitHtmlHeadElement: boolean;
 }
 
 export interface OtherProject extends ProjectInfo {
