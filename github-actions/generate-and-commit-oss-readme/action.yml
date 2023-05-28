@@ -26,7 +26,7 @@ inputs:
   template_file:
     required: false
     description: 'path to readme template file'
-    default: 'non-sdk.template.md'
+    default: 'README.template.md'
   output_file:
     required: false
     description: 'output file path to write generated README'
