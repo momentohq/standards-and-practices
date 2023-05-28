@@ -34,15 +34,17 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: momentohq/standards-and-practices/github-actions/oss-readme-template@gh-actions-v1
+    - uses: momentohq/standards-and-practices/github-actions/oss-readme-template@gh-actions-v2
       with:
         project_type: "${{ inputs.project_type }}"
         sdk_language: "${{ inputs.sdk_language }}"
+        dev_docs_slug: "${{ inputs.dev_docs_slug }}"
+        multiple_sdks: "${{ inputs.multiple_sdks }}"
+        omit_html_head: "${{ inputs.omit_html_head }}"
         project_status: "${{  inputs.project_status }}"
         project_stability: "${{ inputs.project_stability }}"
         template_file: "${{ inputs.template_file }}"
         output_file: "${{ inputs.output_file }}"
-        usage_example_path: "${{ inputs.usage_example_path }}"
 
     - shell: bash
       run: |
