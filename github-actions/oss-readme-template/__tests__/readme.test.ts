@@ -10,7 +10,7 @@ import * as path from 'path';
 
 describe('readme generator', () => {
   // shows how the runner will run a javascript action with env / stdout protocol
-  it('succeeds on happy path', () => {
+  it('succeeds on happy path for "Other" project type', () => {
     const templateString = `
 {{ ossHeader }}
 
@@ -22,12 +22,12 @@ foo
 
 foo sub
 
-# Bar  
+# Bar
 
 STATIC CONTENT
 
 {{ ossFooter }}
-`;
+  `;
     const output = generateReadmeStringFromTemplateString({
       templateContents: templateString,
       projectInfo: {
@@ -40,7 +40,7 @@ STATIC CONTENT
 <img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
 
 [![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-incubating.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-beta.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-beta.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
 
 
 # Foo
@@ -51,19 +51,19 @@ foo
 
 foo sub
 
-# Bar  
+# Bar
 
 STATIC CONTENT
 
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
-`);
+  `);
   });
 
   it("throws an error if the template doesn't begin with the ossHeader marker", () => {
     const templateStringWithoutOssHeader = `
 # FIRST SECTION
-`;
+  `;
     expect(() => {
       generateReadmeStringFromTemplateString({
         templateContents: templateStringWithoutOssHeader,
@@ -77,85 +77,71 @@ For more info, visit our website at [https://gomomento.com](https://gomomento.co
 {"lineNumber":2,"ruleNames":["must-include-oss-headers"],"ruleDescription":"Template must begin with OSS Header and end with OSS Footer","ruleInformation":"https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator","errorDetail":"Expected template file to end with {{ ossFooter }}, on a line by itself.","errorContext":null,"errorRange":null,"fixInfo":null}`);
   });
 
-  const VALID_TEMPLATE_CONTENTS = fs
-    .readFileSync(path.join(__dirname, 'workflows', 'valid-sdk-template.md'))
+  const validSdkTemplateContents = fs
+    .readFileSync(
+      path.join(__dirname, 'input-templates', 'valid-sdk.template.md')
+    )
     .toString();
 
-  const EXAMPLE_SDK_PROJECT_INFO: SdkProject = {
+  const exampleSdkProjectInfo: SdkProject = {
     type: ProjectType.SDK,
     language: 'WaterLoop',
-    usageExamplePath: path.join(__dirname, 'examples', 'usage.ts'),
+    devDocsSlug: 'waterloop',
+    multipleSdksInRepo: false,
+    omitHtmlHeadElement: false,
   };
 
   it('succeeds for an SDK README that includes all of the expected section headers', () => {
+    const expectedOutput_validSdkTemplate = fs
+      .readFileSync(
+        path.join(__dirname, 'expected-output-templates', 'valid-sdk.md')
+      )
+      .toString();
+
     expect(
       generateReadmeStringFromTemplateString({
-        templateContents: VALID_TEMPLATE_CONTENTS,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+        templateContents: validSdkTemplateContents,
+        projectInfo: exampleSdkProjectInfo,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
       })
-    ).toEqual(`<head>
-  <meta name="Momento WaterLoop Client Library Documentation" content="WaterLoop client software development kit for Momento Serverless Cache">
-</head>
-<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+    ).toEqual(expectedOutput_validSdkTemplate);
+  });
 
-[![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-stable.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+  it('omits HTML head from an SDK README when requested', () => {
+    const projectInfo: SdkProject = {
+      type: ProjectType.SDK,
+      language: 'WaterLoop',
+      devDocsSlug: 'waterloop',
+      multipleSdksInRepo: false,
+      omitHtmlHeadElement: true,
+    };
 
-# Momento WaterLoop Client Library
+    const expectedOutput_validSdkTemplate = fs
+      .readFileSync(
+        path.join(
+          __dirname,
+          'expected-output-templates',
+          'valid-sdk-no-html-head.md'
+        )
+      )
+      .toString();
 
-
-WaterLoop client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
-any of the operational overhead required by traditional caching solutions!
-
-
-
-## Getting Started :running:
-
-### Requirements
-
-My Awesome Requirements
-
-### Examples
-
-My awesome examples!
-
-### Installation
-
-Run these awesome commands:
-
-\`\`\`bash
-foo
-bar
-baz
-\`\`\`
-
-### Usage
-
-Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
-
-Here is a quickstart you can use in your own project:
-
-\`\`\`typescript
-console.log('Hello world!');
-
-\`\`\`
-
-### Error Handling
-
-### Tuning
-
-----------------------------------------------------------------------------------------
-For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
-`);
+    expect(
+      generateReadmeStringFromTemplateString({
+        templateContents: validSdkTemplateContents,
+        projectInfo: projectInfo,
+        projectStatus: ProjectStatus.OFFICIAL,
+        projectStability: ProjectStability.STABLE,
+      })
+    ).toEqual(expectedOutput_validSdkTemplate);
   });
 
   it('includes expected text for incubating projects', () => {
     expect(
       generateReadmeStringFromTemplateString({
-        templateContents: VALID_TEMPLATE_CONTENTS,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+        templateContents: validSdkTemplateContents,
+        projectInfo: exampleSdkProjectInfo,
         projectStatus: ProjectStatus.INCUBATING,
         projectStability: ProjectStability.EXPERIMENTAL,
       })
@@ -168,8 +154,8 @@ backward incompatible changes.  For more info, click on the incubating badge abo
   it('includes expected text for experimental apis', () => {
     expect(
       generateReadmeStringFromTemplateString({
-        templateContents: VALID_TEMPLATE_CONTENTS,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+        templateContents: validSdkTemplateContents,
+        projectInfo: exampleSdkProjectInfo,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.EXPERIMENTAL,
       })
@@ -183,21 +169,19 @@ changes.  For more info, click on the experimental badge above.`);
     expect(() =>
       generateReadmeStringFromTemplateString({
         templateContents: `
-{{ ossHeader }}
+  {{ ossHeader }}
 
-## Getting Started :running:
+  ## Packages
 
-### FOO
+  ### FOO
 
-{{ ossFooter }}
-`,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+  {{ ossFooter }}
+  `,
+        projectInfo: exampleSdkProjectInfo,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
       })
-    ).toThrowError(
-      /After header 'Getting Started :running:', missing expected header: 'Requirements'/
-    );
+    ).toThrowError(/After header 'Packages', missing expected header: 'Usage'/);
   });
 
   it('succeeds for an SDK README that includes all of the expected section headers, but also includes additional headers', () => {
@@ -205,8 +189,18 @@ changes.  For more info, click on the experimental badge above.`);
       .readFileSync(
         path.join(
           __dirname,
-          'workflows',
-          'valid-sdk-template-with-extra-headers.md'
+          'input-templates',
+          'valid-sdk-with-extra-headers.template.md'
+        )
+      )
+      .toString();
+
+    const expectedOutput_validSdkExtraHeaders = fs
+      .readFileSync(
+        path.join(
+          __dirname,
+          'expected-output-templates',
+          'valid-sdk-with-extra-headers.md'
         )
       )
       .toString();
@@ -214,106 +208,133 @@ changes.  For more info, click on the experimental badge above.`);
     expect(
       generateReadmeStringFromTemplateString({
         templateContents: templateContents,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+        projectInfo: exampleSdkProjectInfo,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
       })
-    ).toEqual(`<head>
-  <meta name="Momento WaterLoop Client Library Documentation" content="WaterLoop client software development kit for Momento Serverless Cache">
-</head>
-<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+    ).toEqual(expectedOutput_validSdkExtraHeaders);
+  });
 
-[![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-stable.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+  it('succeeds for an SDK README where there are multiple SDKs in the same repo', () => {
+    const templateContents = fs
+      .readFileSync(
+        path.join(
+          __dirname,
+          'input-templates',
+          'valid-multiple-sdks.template.md'
+        )
+      )
+      .toString();
 
-# Momento WaterLoop Client Library
+    const expectedOutput_validMultipleSdks = fs
+      .readFileSync(
+        path.join(
+          __dirname,
+          'expected-output-templates',
+          'valid-multiple-sdks.md'
+        )
+      )
+      .toString();
 
+    const exampleSdkProjectInfo: SdkProject = {
+      type: ProjectType.SDK,
+      language: 'JavaScript',
+      devDocsSlug: 'nodejs',
+      multipleSdksInRepo: true,
+      omitHtmlHeadElement: false,
+    };
 
-WaterLoop client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
-any of the operational overhead required by traditional caching solutions!
-
-
-
-## Getting Started :running:
-
-### Requirements
-
-My Awesome Requirements
-
-### Examples
-
-My awesome examples!
-
-### Momento Response Types
-
-This is an extra section that is not present in all SDKs!
-
-### Installation
-
-Run these awesome commands:
-
-\`\`\`bash
-foo
-bar
-baz
-\`\`\`
-
-### Usage
-
-Checkout our [examples](./examples/README.md) directory for complete examples of how to use the SDK.
-
-Here is a quickstart you can use in your own project:
-
-\`\`\`typescript
-console.log('Hello world!');
-
-\`\`\`
-
-### Error Handling
-
-### Tuning
-
-----------------------------------------------------------------------------------------
-For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
-`);
+    expect(
+      generateReadmeStringFromTemplateString({
+        templateContents: templateContents,
+        projectInfo: exampleSdkProjectInfo,
+        projectStatus: ProjectStatus.OFFICIAL,
+        projectStability: ProjectStability.STABLE,
+      })
+    ).toEqual(expectedOutput_validMultipleSdks);
   });
 
   it('fails for an SDK README that has expected section headers in the wrong order', () => {
     expect(() =>
       generateReadmeStringFromTemplateString({
         templateContents: `
-{{ ossHeader }}
+  {{ ossHeader }}
 
-## Getting Started :running:
+  ## Packages
 
-### Requirements
+  Packages
 
-My Awesome Requirements
+  ## Developing
 
-### Examples
+  Developing
 
-Examples
+  ## Usage
 
-### Usage
+  Usage
 
-My Awesome Hello World Code
+  ## Getting Started and Documentation
 
-### Installation
+  Documentation
 
-My Awesome Examples
+  ## Examples
 
-### Error Handling
+  Example:
+  {% include "../examples/usage.ts" %}
 
-### Tuning
-
-{{ ossFooter }}
-`,
-        projectInfo: EXAMPLE_SDK_PROJECT_INFO,
+  {{ ossFooter }}
+  `,
+        projectInfo: exampleSdkProjectInfo,
         projectStatus: ProjectStatus.OFFICIAL,
         projectStability: ProjectStability.STABLE,
       })
     ).toThrowError(
-      /After header 'Installation', missing expected header: 'Usage'/
+      /After header 'Examples', missing expected header: 'Developing'/
+    );
+  });
+
+  it("fails for an SDK README that doesn't include at least one 'include'", () => {
+    const exampleSdkProjectInfo: SdkProject = {
+      type: ProjectType.SDK,
+      language: 'JavaScript',
+      devDocsSlug: 'nodejs',
+      multipleSdksInRepo: false,
+      omitHtmlHeadElement: false,
+    };
+
+    const templateStringWithoutInclude = `
+{{ ossHeader }}
+
+## Packages
+
+Packages
+
+## Usage
+
+Usage
+
+## Getting Started and Documentation
+
+Documentation
+
+## Examples
+
+Examples
+
+## Developing
+
+Developing
+
+{{ ossFooter }}
+`;
+    expect(() => {
+      generateReadmeStringFromTemplateString({
+        templateContents: templateStringWithoutInclude,
+        projectInfo: exampleSdkProjectInfo,
+        projectStatus: ProjectStatus.INCUBATING,
+        projectStability: ProjectStability.EXPERIMENTAL,
+      });
+    }).toThrowError(
+      /No 'include' found: SDK templates must contain at least one {% include %} statement to inject example code/
     );
   });
 });

@@ -61,14 +61,30 @@ function getProjectInfo(projectType: ProjectType): ProjectInfo {
       required: true,
       trimWhitespace: true,
     });
-    const usageExamplePath = core.getInput('usage_example_path', {
+    const devDocsSlug = core.getInput('dev_docs_slug', {
       required: true,
       trimWhitespace: true,
     });
+    const multipleSdks =
+      core
+        .getInput('multiple_sdks', {
+          required: false,
+          trimWhitespace: true,
+        })
+        .toLowerCase() === 'true';
+    const omitHtmlHead =
+      core
+        .getInput('omit_html_head', {
+          required: false,
+          trimWhitespace: true,
+        })
+        .toLowerCase() === 'true';
     const projectInfo: SdkProject = {
       type: ProjectType.SDK,
       language: sdkLanguage,
-      usageExamplePath: usageExamplePath,
+      devDocsSlug: devDocsSlug,
+      multipleSdksInRepo: multipleSdks,
+      omitHtmlHeadElement: omitHtmlHead,
     };
     return projectInfo;
   }

@@ -55,31 +55,23 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
     const expectedRemainingHeaders: Array<Header> = [
       {
         tag: 'h2',
-        content: 'Getting Started :running:',
+        content: 'Packages',
       },
       {
-        tag: 'h3',
-        content: 'Requirements',
-      },
-      {
-        tag: 'h3',
-        content: 'Examples',
-      },
-      {
-        tag: 'h3',
-        content: 'Installation',
-      },
-      {
-        tag: 'h3',
+        tag: 'h2',
         content: 'Usage',
       },
       {
-        tag: 'h3',
-        content: 'Error Handling',
+        tag: 'h2',
+        content: 'Getting Started and Documentation',
       },
       {
-        tag: 'h3',
-        content: 'Tuning',
+        tag: 'h2',
+        content: 'Examples',
+      },
+      {
+        tag: 'h2',
+        content: 'Developing',
       },
     ];
 
