@@ -57,7 +57,7 @@ interface HeaderTemplateContext {
   projectStability: string;
 }
 
-const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+const OSS_README_HEADER_TEMPLATE = `<img src="https://docs.momentohq.com/img/momento-logo-forest.svg" alt="logo" width="400"/>
 
 [![project status](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-status-{{ projectStatus }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md)
 [![project stability](https://{{ githubOrgName }}.github.io/standards-and-practices/badges/project-stability-{{ projectStability }}.svg)](https://github.com/{{ githubOrgName }}/standards-and-practices/blob/main/docs/momento-on-github.md)
