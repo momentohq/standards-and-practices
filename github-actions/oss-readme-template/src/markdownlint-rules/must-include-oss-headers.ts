@@ -14,7 +14,7 @@ export const mustIncludeOssHeaders: markdownlint.Rule = {
   description: 'Template must begin with OSS Header and end with OSS Footer',
   tags: ['momento-oss'],
   information: new URL(
-    'https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator'
+      'https://github.com/momentohq/standards-and-practices/tree/main/github-actions/oss-readme-template'
   ),
   function: (params, onError) => {
     const firstThreeTokens = params.tokens.slice(0, 3);
