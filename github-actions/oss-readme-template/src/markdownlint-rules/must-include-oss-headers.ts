@@ -57,8 +57,9 @@ function verifyTokens(
     !arrayEquals(['paragraph_open', 'inline', 'paragraph_close'], tokenTypes)
   ) {
     console.error(`Found token types: ${JSON.stringify(tokenTypes)}`);
+    const lineNumber = tokens[0].lineNumber ?? 1;
     onError({
-      lineNumber: tokens[0].lineNumber,
+      lineNumber: lineNumber,
       detail: `${errorMessagePrefix} {{ ${expectedTag} }}, on a line by itself.`,
     });
     return;
