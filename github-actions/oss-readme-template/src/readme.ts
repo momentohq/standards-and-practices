@@ -47,7 +47,7 @@ interface SdkPreHeaderTemplateContext {
 }
 
 const OSS_SDK_README_PREHEADER_TEMPLATE = `<head>
-  <meta name="Momento {{ sdkLanguage }} Client Library Documentation" content="{{ sdkLanguage }} client software development kit for Momento Cache">
+  <meta name="Momento Client Library Documentation for {{ sdkLanguage }}" content="Momento client software development kit for {{ sdkLanguage }}">
 </head>
 `;
 
@@ -69,17 +69,17 @@ interface ReadmeTemplateContext {
 }
 
 const OSS_SDK_HEADER_TEMPLATE = `
-# Momento {{ sdkLanguage }} Client Librar{{ singularPluralLibrarySuffix }}
+# Momento Client Librar{{ singularPluralLibrarySuffix }} for {{ sdkLanguage }}
 {{ stabilityNotes }}
 Momento Cache is a fast, simple, pay-as-you-go caching solution without any of the operational overhead
-required by traditional caching solutions.  This repo contains the source code for the Momento {{ sdkLanguage }} client librar{{ singularPluralLibrarySuffix }}.
+required by traditional caching solutions.  This repo contains the source code for the Momento client librar{{ singularPluralLibrarySuffix }} for {{ sdkLanguage }}.
 
 To get started with Momento you will need a Momento Auth Token. You can get one from the [Momento Console](https://console.gomomento.com).
 
 * Website: [https://www.gomomento.com/](https://www.gomomento.com/)
 * Momento Documentation: [https://docs.momentohq.com/](https://docs.momentohq.com/)
 * Getting Started: [https://docs.momentohq.com/getting-started](https://docs.momentohq.com/getting-started)
-* {{ sdkLanguage }} SDK Documentation: [https://docs.momentohq.com/sdks/{{ sdkDevDocsSlug }}](https://docs.momentohq.com/sdks/{{ sdkDevDocsSlug }})
+* Momento SDK Documentation for {{ sdkLanguage }}: [https://docs.momentohq.com/sdks/{{ sdkDevDocsSlug }}](https://docs.momentohq.com/sdks/{{ sdkDevDocsSlug }})
 * Discuss: [Momento Discord](https://discord.gg/3HkAKjUZGq)
 `.trimEnd();
 
