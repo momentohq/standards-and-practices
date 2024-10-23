@@ -47,7 +47,7 @@ interface SdkPreHeaderTemplateContext {
 }
 
 const OSS_SDK_README_PREHEADER_TEMPLATE = `<head>
-  <meta name="Momento Client Library for {{ sdkLanguage }} Documentation" content="Momento client software development kit for {{ sdkLanguage }}">
+  <meta name="Momento Client Library Documentation for {{ sdkLanguage }}" content="Momento client software development kit for {{ sdkLanguage }}">
 </head>
 `;
 
