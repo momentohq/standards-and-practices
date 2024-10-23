@@ -9,3 +9,12 @@ Links:
 * [Momento Client SDKs - Specifications](./docs/client-specifications/README.md)
 * [Momento Client SDKs - Artifact Release Process](./docs/momento-sdk-release-process.md)
 
+# Momento Shared Github Actions
+
+In the [./github-actions](./github-actions) directory, you will find source code for a few
+github actions that we re-use across multiple other repos. The most interesting ones are the
+README generator actions.
+
+There is no automation around the release process for these actions. Please see the README
+in the github-actions dir for more info.
+
