@@ -14,7 +14,7 @@ export const verifySdkSectionHeaders: markdownlint.Rule = {
   description: 'SDK must have required section headers',
   tags: ['momento-oss'],
   information: new URL(
-    'https://github.com/momentohq/standards-and-practices/github-actions/oss-readme-generator'
+    'https://github.com/momentohq/standards-and-practices/tree/main/github-actions/oss-readme-template'
   ),
   function: (params, onError) => {
     const headers: Array<HeaderWithLineNumber> = [];
