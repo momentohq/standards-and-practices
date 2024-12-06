@@ -1,4 +1,4 @@
-<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+<img src="https://docs.momentohq.com/img/momento-logo-forest.svg" alt="logo" width="400"/>
 
 # Momento Open Source Software
 
