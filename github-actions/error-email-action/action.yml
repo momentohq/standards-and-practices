@@ -8,7 +8,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: dawidd6/action-send-mail@v3
+    - uses: dawidd6/action-send-mail@v16
       with:
         # Required mail server address:
         server_address: smtp.gmail.com
@@ -23,7 +23,7 @@ runs:
         # Required recipients' addresses:
         to: eng-deveco@momentohq.com
         # Required sender full name (address can be skipped):
-        from: Momento OSS
+        from: Momento OSS <github-actions@momentohq.com>
         # Optional whether this connection use TLS (default is true if server_port is 465)
         secure: true
         # Optional plain body:
