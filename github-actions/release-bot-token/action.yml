@@ -1,0 +1,42 @@
+name: 'Momento release bot token'
+description: >
+  Mints a short-lived installation token for the momento-release-bot GitHub App.
+  Use it wherever a workflow has to create a ref, open a PR, or reach another
+  repo - a push or PR authored by the built-in GITHUB_TOKEN deliberately does not
+  start a workflow run, so release automation authored with it would never fire CI.
+
+inputs:
+  app-id:
+    required: true
+    description: 'App id. Normally secrets.MOMENTO_RELEASE_APP_ID.'
+  private-key:
+    required: true
+    description: 'App private key. Normally secrets.MOMENTO_RELEASE_APP_PRIVATE_KEY.'
+  owner:
+    required: false
+    description: >
+      Org to scope the token to. Leave unset to scope it to the repository
+      running the workflow, which is what you want unless you are reaching
+      another repo.
+  repositories:
+    required: false
+    description: >
+      Newline- or comma-separated repos to scope the token to. Requires `owner`.
+      Set this when writing to another repo so the token is not broader than the
+      job needs.
+
+outputs:
+  token:
+    description: 'Installation access token. Expires one hour after it is minted.'
+    value: ${{ steps.app-token.outputs.token }}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/create-github-app-token@v3
+      id: app-token
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.private-key }}
+        owner: ${{ inputs.owner }}
+        repositories: ${{ inputs.repositories }}
